@@ -5,6 +5,8 @@ import {
   SafeAreaView,
   Pressable,
   Button,
+  FlatList,
+  TouchableOpacity,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
@@ -13,6 +15,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import AddScreen from "./AddScreen";
+import AddButton from "./MainScreenComponents";
 
 export default function App() {
   const [pressedButton, setPressedButton] = useState("Annual");
@@ -22,7 +25,8 @@ export default function App() {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      background: "white",
+      background: "#e3f0ff",
+      margin: 10,
     },
   };
   function HomeScreen() {
@@ -54,14 +58,22 @@ export default function App() {
       <SafeAreaView style={styles.container}>
         <NavBar />
         <Text>Home Screen</Text>
-        <Button
+        {/* <Button
           title="Go to Add"
+          onPress={() => {
+            navigation.navigate("AddScreen");
+          }}
+        /> */}
+        <AddButton
           onPress={() => {
             navigation.navigate("AddScreen");
           }}
         />
       </SafeAreaView>
     );
+  };
+  const SalariesList = () => {
+    return <FlatList></FlatList>;
   };
 
   const NavBar = () => {
@@ -108,7 +120,7 @@ export default function App() {
         style={{
           ...styles.buttonNav,
           // backgroundColor: title === pressedButton ? "#205a6d" : "#3596b5",
-          backgroundColor: title === pressedButton ? "#205a6d" : "#3596b5",
+          backgroundColor: title === pressedButton ? "#002982" : "#2690ff",
         }}
         onPress={onPress}
       >
@@ -123,6 +135,9 @@ export default function App() {
           name="Hom"
           component={HomeScreen}
           options={{
+            tabBarStyle: {
+              backgroundColor: "#e3f0ff",
+            },
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons
                 name="home-circle"
@@ -155,7 +170,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#e3f0ff",
     alignItems: "center",
     justifyContent: "flex-start",
     margin: 10,
@@ -167,7 +182,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 10,
     elevation: 10,
-    backgroundColor: "#3596b5",
+    backgroundColor: "#2690ff",
     // marginHorizontal: 2,
   },
   ButtonText: {
@@ -182,7 +197,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     // flexDirection: "row",
     alignItems: "flex-start",
-    backgroundColor: "#3596b5",
+    backgroundColor: "#2690ff",
     // borderColor: "black",
     borderRadius: 10,
     // borderWidth: 1,
