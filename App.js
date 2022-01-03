@@ -6,7 +6,6 @@ import {
   Pressable,
   Button,
   FlatList,
-  TouchableOpacity,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
@@ -15,7 +14,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import AddScreen from "./AddScreen";
-import AddButton from "./MainScreenComponents";
+import CustomButton from "./components/CustomTouchButton";
 
 export default function App() {
   const [pressedButton, setPressedButton] = useState("Annual");
@@ -64,7 +63,10 @@ export default function App() {
             navigation.navigate("AddScreen");
           }}
         /> */}
-        <AddButton
+        <CustomButton
+          name="ios-add-circle"
+          color="#3184ff"
+          size="50"
           onPress={() => {
             navigation.navigate("AddScreen");
           }}
