@@ -1,12 +1,19 @@
 import { Text, Pressable, StyleSheet } from "react-native";
+import { useState } from "react";
 const CustomButtonGlobal = (props) => {
   const { onPress, title } = props;
+  const [pressed, setPressed] = useState(false);
   return (
     <Pressable
       style={{
         ...styles.button,
+        // backgroundColor: pressed ? "white" : "black",
       }}
-      onPress={onPress}
+      onPress={() => {
+        // setPressed(true);
+        onPress();
+        // setPressed(false);
+      }}
     >
       <Text style={styles.ButtonText}>{title}</Text>
     </Pressable>

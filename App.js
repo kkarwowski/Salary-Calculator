@@ -12,10 +12,12 @@ import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import DetailsScreen from "./DetailsScreen";
 import AddScreen from "./AddScreen";
 import CustomButton from "./components/CustomTouchButton";
-
+import CardList from "./components/CardList";
+import { TransitionSpecs } from "@react-navigation/stack";
+import { CardStyleInterpolators } from "@react-navigation/stack";
 export default function App() {
   const [pressedButton, setPressedButton] = useState("Annual");
   const Tab = createBottomTabNavigator();
@@ -26,6 +28,17 @@ export default function App() {
       ...DefaultTheme.colors,
       background: "#e3f0ff",
       margin: 10,
+    },
+  };
+  const config = {
+    animation: "spring",
+    config: {
+      stiffness: 1000,
+      damping: 500,
+      mass: 3,
+      overshootClamping: true,
+      restDisplacementThreshold: 0.01,
+      restSpeedThreshold: 0.01,
     },
   };
   function HomeScreen() {
@@ -40,6 +53,21 @@ export default function App() {
           name="AddScreen"
           component={AddScreen}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DetailsScreen"
+          component={DetailsScreen}
+          // options={{
+          //   headerShown: false,
+          //   gestureEnabled: false,
+          //   cardStyleInterpolator: forFade,
+          // }}
+          options={{
+            transitionSpec: {
+              open: config,
+              close: config,
+            },
+          }}
         />
       </Stack.Navigator>
     );
@@ -57,19 +85,13 @@ export default function App() {
       <SafeAreaView style={styles.container}>
         <NavBar />
         <Text>Home Screen</Text>
-        {/* <Button
-          title="Go to Add"
-          onPress={() => {
-            navigation.navigate("AddScreen");
-          }}
-        /> */}
+
+        <CardList navigation={navigation} />
         <CustomButton
-          name="ios-add-circle"
-          color="#3184ff"
-          size="50"
-          onPress={() => {
-            navigation.navigate("AddScreen");
-          }}
+          name="add-circle"
+          size={50}
+          color={"blue"}
+          onPress={() => navigation.navigate("AddScreen")}
         />
       </SafeAreaView>
     );

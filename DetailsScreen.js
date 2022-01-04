@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import AddForm from "./components/AddForm";
 import CustomButton from "./components/CustomTouchButton";
-export default function AddScreen({ navigation }) {
+export default function DetailsScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View
