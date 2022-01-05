@@ -7,7 +7,7 @@ import {
   TextInput,
 } from "react-native";
 import AddForm from "./components/AddForm";
-import CustomButton from "./components/CustomTouchButton";
+import CustomButtonIcon from "./components/CustomTouchButton";
 export default function DetailsScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
@@ -18,7 +18,7 @@ export default function DetailsScreen({ navigation }) {
           width: "100%",
         }}
       >
-        <CustomButton
+        <CustomButtonIcon
           size={30}
           color="black"
           name="close"

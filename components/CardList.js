@@ -7,8 +7,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Chip } from "react-native-paper";
-export default function CardList({ navigation }) {
-  generateBoxShadowStyle(-2, 4, "#171717", 0.2, 3, 4, "#171717");
+import CustomButtonIcon from "./CustomTouchButton";
+export default function CardList({ navigation, savedSalaries }) {
+  //   generateBoxShadowStyle(-2, 4, "#171717", 0.2, 3, 4, "#171717");
   const DATA = [
     {
       id: "1",
@@ -22,15 +23,36 @@ export default function CardList({ navigation }) {
     },
   ];
 
-  const randomColorGenerator = () => {
-    var randomColor = Math.floor(Math.random() * 16777215).toString(16);
-    return "#" + randomColor;
+  //   const randomColorGenerator = () => {
+  //     var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+  //     return "#" + randomColor;
+  //   };
+
+  const AddTaskButton = () => {
+    return (
+      <View style={{ alignItems: "center" }}>
+        <CustomButtonIcon
+          name="add-circle"
+          size={50}
+          color={"#2f4858"}
+          onPress={() => navigation.navigate("AddScreen")}
+        />
+      </View>
+    );
   };
 
   return (
     <View style={styles.cardContainer}>
       <FlatList
-        data={DATA}
+        contentContainerStyle={{
+          justifyContent: "flex-start",
+          flex: 1,
+          backgroundColor: "#f7d13f",
+        }}
+        //   contentContainerStyle={styles.cardContainer}
+        // data={DATA}
+        data={savedSalaries && Object.keys(savedSalaries)}
+        ListFooterComponent={<AddTaskButton />}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => {
@@ -41,18 +63,20 @@ export default function CardList({ navigation }) {
               <View style={{ alignItems: "flex-start", flexDirection: "row" }}>
                 <Chip
                   style={{
-                    backgroundColor: randomColorGenerator(),
+                    // backgroundColor: randomColorGenerator(),
+                    backgroundColor: "black",
+                    padding: 0,
                   }}
                 >
-                  <Text style={{ color: "white" }}>sdsd</Text>
+                  <Text style={{ color: "white" }}>{item}</Text>
                 </Chip>
               </View>
-              <Text>{item.name}</Text>
-              <Text>{item.salary}</Text>
+              {/* <Text>{item.name}</Text> */}
+              <Text>{savedSalaries[item].salary}</Text>
             </View>
           </TouchableOpacity>
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item}
       />
     </View>
   );
@@ -84,19 +108,17 @@ const generateBoxShadowStyle = (
 
 const styles = StyleSheet.create({
   cardContainer: {
-    // flex: 1,
-    width: "100%",
-    flexDirection: "column",
-    // alignItems: "center",
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "#f7d13f",
+    marginVertical: 5,
   },
   card: {
-    // flex: 1,
-    // height: 100,
-    backgroundColor: "#a1e7ff",
+    backgroundColor: "#b2aa99",
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 15,
-    marginVertical: 10,
-    marginHorizontal: 20,
+    marginVertical: 5,
+    marginHorizontal: 10,
   },
 });

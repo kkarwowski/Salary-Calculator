@@ -6,6 +6,7 @@ import {
   Pressable,
   Button,
   FlatList,
+  ScrollView,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
@@ -14,19 +15,49 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DetailsScreen from "./DetailsScreen";
 import AddScreen from "./AddScreen";
-import CustomButton from "./components/CustomTouchButton";
+import CustomButtonIcon from "./components/CustomTouchButton";
 import CardList from "./components/CardList";
+import { getData, storeData } from "./utils/dataStorage";
 import { TransitionSpecs } from "@react-navigation/stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
+import CustomButtonText from "./components/CustomButtonText";
 export default function App() {
   const [pressedButton, setPressedButton] = useState("Annual");
   const Tab = createBottomTabNavigator();
   const Stack = createNativeStackNavigator();
+  const [savedSalaries, setSavedSalaries] = useState();
+
+  useEffect(() => {
+    getAndSetSalaries();
+  }, []);
+  const testObject = {
+    test: {
+      salary: "23434",
+      pension: 5,
+    },
+    test1: {
+      salary: "2457622222",
+      pension: 56,
+    },
+  };
+
+  const getAndSetSalaries = async () => {
+    const data = await getData();
+    if (data) {
+      setSavedSalaries(JSON.parse(data));
+      console.log(data, "yess");
+    } else {
+      // setSavedSalaries(null);
+      confirm.log(data);
+    }
+  };
   const MyTheme = {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      background: "#e3f0ff",
+      // background: "#e3f0ff",
+      background: "#f7d13f",
+
       margin: 10,
     },
   };
@@ -41,6 +72,7 @@ export default function App() {
       restSpeedThreshold: 0.01,
     },
   };
+
   function HomeScreen() {
     return (
       <Stack.Navigator>
@@ -63,6 +95,7 @@ export default function App() {
           //   cardStyleInterpolator: forFade,
           // }}
           options={{
+            headerShown: false,
             transitionSpec: {
               open: config,
               close: config,
@@ -80,24 +113,33 @@ export default function App() {
       </View>
     );
   }
+
   const Home = ({ navigation }) => {
     return (
       <SafeAreaView style={styles.container}>
-        <NavBar />
-        <Text>Home Screen</Text>
+        <Text style={{ fontSize: 20, padding: 20, fontWeight: "600" }}>
+          Saved Salaries
+        </Text>
 
-        <CardList navigation={navigation} />
-        <CustomButton
-          name="add-circle"
-          size={50}
-          color={"blue"}
-          onPress={() => navigation.navigate("AddScreen")}
+        <NavBar />
+        <CardList navigation={navigation} savedSalaries={savedSalaries} />
+        <CustomButtonText text="test" onPress={() => storeData(testObject)} />
+        <CustomButtonText
+          text="test read"
+          onPress={() => {
+            getAndSetSalaries();
+          }}
+        />
+        <CustomButtonText
+          text="read obj"
+          onPress={() =>
+            Object.keys(savedSalaries).map((key) => {
+              console.log(savedSalaries[key].salary);
+            })
+          }
         />
       </SafeAreaView>
     );
-  };
-  const SalariesList = () => {
-    return <FlatList></FlatList>;
   };
 
   const NavBar = () => {
@@ -144,29 +186,47 @@ export default function App() {
         style={{
           ...styles.buttonNav,
           // backgroundColor: title === pressedButton ? "#205a6d" : "#3596b5",
-          backgroundColor: title === pressedButton ? "#002982" : "#2690ff",
+          // backgroundColor: title === pressedButton ? "#002982" : "#2690ff",
+          backgroundColor: title === pressedButton ? "#006e5d" : "#f2fedc",
         }}
         onPress={onPress}
       >
-        <Text style={styles.ButtonText}>{title}</Text>
+        <Text
+          style={{
+            ...styles.ButtonText,
+            color: title === pressedButton ? "white" : "black",
+          }}
+        >
+          {title}
+        </Text>
       </Pressable>
     );
   };
   return (
     <NavigationContainer theme={MyTheme}>
-      <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
         <Tab.Screen
-          name="Hom"
+          name="Saved Salaries"
           component={HomeScreen}
           options={{
             tabBarStyle: {
-              backgroundColor: "#e3f0ff",
+              backgroundColor: "#f7d13f",
+            },
+
+            tabBarLabelStyle: {
+              fontSize: 13,
+              color: "black",
+              fontWeight: "500",
             },
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons
                 name="home-circle"
-                color={color}
-                size={size}
+                color={"#2f4858"}
+                size={30}
               />
             ),
             // tabBarBadge: 3,
@@ -176,11 +236,19 @@ export default function App() {
           name="SecondScreen"
           component={SecondScreen}
           options={{
+            tabBarStyle: {
+              backgroundColor: "#f7d13f",
+            },
+            tabBarLabelStyle: {
+              fontSize: 13,
+              color: "black",
+              fontWeight: "500",
+            },
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons
                 name="tooltip-edit"
-                color={color}
-                size={size}
+                color={"#2f4858"}
+                size={30}
               />
             ),
             // tabBarBadge: 3, tooltip-edit
@@ -194,8 +262,9 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#e3f0ff",
+    backgroundColor: "#f7d13f",
     alignItems: "center",
+    alignContent: "center",
     justifyContent: "flex-start",
     margin: 10,
   },
@@ -206,26 +275,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 10,
     elevation: 10,
-    backgroundColor: "#2690ff",
-    // marginHorizontal: 2,
+    backgroundColor: "#f2fedc",
   },
   ButtonText: {
     fontSize: 16,
     lineHeight: 21,
     fontWeight: "normal",
     letterSpacing: 0.25,
-    color: "white",
+    color: "black",
   },
   topNavContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    // flexDirection: "row",
     alignItems: "flex-start",
-    backgroundColor: "#2690ff",
-    // borderColor: "black",
+    // backgroundColor: "#2690ff",
+    backgroundColor: "#f2fedc",
+
     borderRadius: 10,
-    // borderWidth: 1,
-    // padding: 5,
     width: "100%",
   },
 });

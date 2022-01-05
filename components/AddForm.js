@@ -9,18 +9,18 @@ import {
 } from "react-native";
 import Collapsible from "react-native-collapsible";
 import { Formik } from "formik";
-import CustomButtonGlobal from "./CustomButton";
 import * as yup from "yup";
-import CustomButton from "./CustomTouchButton";
+import CustomButtonIcon from "./CustomTouchButton";
+
 import { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import DropDownPicker from "react-native-dropdown-picker";
+import CustomButtonText from "./CustomButtonText";
 export default function AddForm() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [valuee, setValuee] = useState("");
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [openCountry, setOpenCountry] = useState(false);
   const [value, setValue] = useState(null);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   const [items, setItems] = useState([
     { label: "Apple", value: "apple" },
     { label: "Banana", value: "banana" },
@@ -29,7 +29,12 @@ export default function AddForm() {
     <SafeAreaView style={styless.container}>
       {/* <View style={styless.container}> */}
       <Formik
-        initialValues={{ name: "", Salary: "30000", Pension: 4 }}
+        initialValues={{
+          name: "",
+          Salary: "30000",
+          Pension: 4,
+          EnglishTax: false,
+        }}
         onSubmit={(values) => {
           console.log(values);
         }}
@@ -45,6 +50,7 @@ export default function AddForm() {
             .min(0)
             .required()
             .typeError("Pension must be a number and can't be empty"),
+          //   EnglishTax: yup.boolean,
         })}
       >
         {(props) => {
@@ -60,8 +66,9 @@ export default function AddForm() {
             >
               <View style={styless.rowContainer}>
                 <Text style={{ marginHorizontal: 10 }}>Salary</Text>
+
                 <TextInput
-                  //   clearButtonMode
+                  clearButtonMode="always"
                   //   name="salary"
                   textAlign="right"
                   style={styless.numberInput}
@@ -71,20 +78,20 @@ export default function AddForm() {
                   onChangeText={(value) => {
                     props.setFieldValue("Salary", value);
                   }}
-                  onCh
                   value={props.values.Salary.toString()}
                 />
               </View>
+
               <View style={styless.rowContainer}>
                 <Text style={{ marginHorizontal: 10 }}>
                   Pension contribution
                 </Text>
 
                 <TextInput
-                  clearButtonMode
+                  clearButtonMode="always"
                   //   name="salary"
                   textAlign="right"
-                  style={styless.numberInput}
+                  style={{ ...styless.numberInput, width: "15%" }}
                   placeholder="Pension"
                   keyboardType="number-pad"
                   returnKeyType={"done"}
@@ -111,10 +118,10 @@ export default function AddForm() {
                   }}
                 >
                   <Text>Advanced Options</Text>
-                  <CustomButton
+                  <CustomButtonIcon
                     name="add-circle-outline"
                     color="black"
-                    size={30}
+                    size={40}
                   />
                 </View>
               </TouchableOpacity>
@@ -125,11 +132,15 @@ export default function AddForm() {
                     Use Scotish Tax Region?{" "}
                   </Text>
                   <Switch
+                    name="EnglishTax"
                     trackColor={{ false: "#767577", true: "red" }}
-                    thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                    thumbColor={props.values.EnglishTax ? "#f5dd4b" : "#f4f3f4"}
                     ios_backgroundColor="white"
-                    onValueChange={toggleSwitch}
-                    value={isEnabled}
+                    onValueChange={(value) => {
+                      props.setFieldValue("EnglishTax", value);
+                      console.log(value);
+                    }}
+                    value={props.values.EnglishTax}
                   />
                   {/* <DropDownPicker
                     labelStyle={{
@@ -146,10 +157,16 @@ export default function AddForm() {
                   /> */}
                 </View>
               </Collapsible>
-              <CustomButtonGlobal
-                title="Save Salary"
+              {/* <CustomButton
+                name="Save Salary"
                 onPress={props.handleSubmit}
+                color="black"
                 style={{ width: "100%" }}
+              /> */}
+              <CustomButtonText
+                onPress={props.handleSubmit}
+                text="Save"
+                color="black"
               />
             </View>
           );
@@ -168,7 +185,7 @@ const styless = StyleSheet.create({
     flexDirection: "column",
   },
   numberInput: {
-    padding: 7,
+    padding: 10,
     width: "30%",
     borderColor: "black",
     backgroundColor: "white",

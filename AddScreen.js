@@ -7,7 +7,7 @@ import {
   TextInput,
 } from "react-native";
 import AddForm from "./components/AddForm";
-import CustomButton from "./components/CustomTouchButton";
+import CustomButtonIcon from "./components/CustomTouchButton";
 export default function AddScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
@@ -16,12 +16,15 @@ export default function AddScreen({ navigation }) {
           justifyContent: "flex-start",
           alignItems: "flex-start",
           width: "100%",
+          marginTop: 10,
+          marginLeft: 10,
         }}
       >
-        <CustomButton
-          size={30}
+        <CustomButtonIcon
+          size={40}
           color="black"
           name="close"
+          size={40}
           onPress={() => navigation.goBack()}
         />
       </View>
@@ -35,9 +38,12 @@ export default function AddScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    transform: [{ translateY: 50 }],
+    borderRadius: 32,
     margin: 10,
     flex: 1,
-    backgroundColor: "#e3f0ff",
+    // backgroundColor: "#f7d13f",
+    backgroundColor: "#F7753F",
     alignItems: "center",
     justifyContent: "flex-start",
   },
