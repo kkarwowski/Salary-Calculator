@@ -8,7 +8,17 @@ import {
 } from "react-native";
 import AddForm from "./components/AddForm";
 import CustomButtonIcon from "./components/CustomTouchButton";
-export default function DetailsScreen({ navigation }) {
+import calculateFunction from "./utils/calculateFunction";
+export default function DetailsScreen({ route, navigation }) {
+  const salary = route.params.salary;
+  const pensionPercentage = route.params.pension;
+  console.log(salary);
+  // const { totalTax, NIYear, pensionContibution, Takehome } = calculateFunction(
+  //   salary,
+  //   pensionPercentage
+  // );
+  calculateFunction(salary, pensionPercentage);
+  // console.log(Takehome, "Take Home");
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -29,7 +39,6 @@ export default function DetailsScreen({ navigation }) {
         />
       </View>
       <Text>sALARY DETAILS</Text>
-
       {/* <Button title="Go/Back" onPress={() => navigation.goBack()} /> */}
     </SafeAreaView>
   );

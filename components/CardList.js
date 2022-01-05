@@ -51,7 +51,10 @@ export default function CardList({ navigation }) {
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("DetailsScreen");
+              navigation.navigate("DetailsScreen", {
+                salary: savedSalaries[item].salary,
+                pension: savedSalaries[item].pension,
+              });
             }}
           >
             <View style={[styles.card, styles.boxShadow]}>

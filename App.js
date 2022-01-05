@@ -18,7 +18,7 @@ import DetailsScreen from "./DetailsScreen";
 import AddScreen from "./AddScreen";
 import CustomButtonIcon from "./components/CustomTouchButton";
 import CardList from "./components/CardList";
-import { getData, storeData } from "./utils/dataStorage";
+import { getData, storeData, deleteAllItems } from "./utils/dataStorage";
 import { TransitionSpecs } from "@react-navigation/stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 import CustomButtonText from "./components/CustomButtonText";
@@ -146,6 +146,7 @@ export default function App() {
             console.log("ALL SALARIES", savedSalaries)
           }
         />
+        <CustomButtonText text="Detele ALL" onPress={() => deleteAllItems()} />
       </SafeAreaView>
     );
   };

@@ -24,4 +24,13 @@ const getData = async () => {
   }
 };
 
-export { storeData, getData };
+const deleteAllItems = async () => {
+  try {
+    // const value = await AsyncStorage.getItem("@salaries_object");
+    await AsyncStorage.removeItem("@salaries_object");
+  } catch (e) {
+    console.log(e);
+    // error reading value
+  }
+};
+export { storeData, getData, deleteAllItems };
