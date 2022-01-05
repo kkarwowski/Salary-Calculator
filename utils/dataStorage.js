@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const storeData = async (value) => {
   try {
+    console.log("savig", value);
     const jsonValue = JSON.stringify(value);
     await AsyncStorage.setItem("@salaries_object", jsonValue);
   } catch (e) {

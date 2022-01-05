@@ -16,17 +16,19 @@ export default function DetailsScreen({ navigation }) {
           justifyContent: "flex-start",
           alignItems: "flex-start",
           width: "100%",
+          marginTop: 10,
+          marginLeft: 10,
         }}
       >
         <CustomButtonIcon
-          size={30}
+          size={40}
           color="black"
           name="close"
+          size={40}
           onPress={() => navigation.goBack()}
         />
       </View>
-      <Text>Add Salary</Text>
-      <AddForm />
+      <Text>sALARY DETAILS</Text>
 
       {/* <Button title="Go/Back" onPress={() => navigation.goBack()} /> */}
     </SafeAreaView>
@@ -36,7 +38,12 @@ export default function DetailsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     margin: 10,
-    flex: 1,
+    transform: [{ translateY: -50 }],
+    transform: [{ translateY: 50 }],
+    borderRadius: 32,
+    borderRadius: 32,
+    height: "90%",
+    // flex: 1,
     backgroundColor: "#e3f0ff",
     alignItems: "center",
     justifyContent: "flex-start",

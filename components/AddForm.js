@@ -11,20 +11,16 @@ import Collapsible from "react-native-collapsible";
 import { Formik } from "formik";
 import * as yup from "yup";
 import CustomButtonIcon from "./CustomTouchButton";
-
-import { useState } from "react";
+import { storeData } from "../utils/dataStorage";
+import { useState, useContext } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import DropDownPicker from "react-native-dropdown-picker";
 import CustomButtonText from "./CustomButtonText";
-export default function AddForm() {
+import { salariesContext } from "../utils/context";
+export default function AddForm({}) {
   const [valuee, setValuee] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [openCountry, setOpenCountry] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    { label: "Apple", value: "apple" },
-    { label: "Banana", value: "banana" },
-  ]);
+  const { savedSalaries, setSavedSalaries } = useContext(salariesContext);
   return (
     <SafeAreaView style={styless.container}>
       {/* <View style={styless.container}> */}
@@ -36,9 +32,16 @@ export default function AddForm() {
           EnglishTax: false,
         }}
         onSubmit={(values) => {
-          console.log(values);
+          const newSavedSalaries = {
+            ...savedSalaries,
+            [values.name]: { salary: values.Salary, pension: values.Pension },
+          };
+          setSavedSalaries(newSavedSalaries);
+          storeData(newSavedSalaries);
+          //   console.log(values);
         }}
         validationSchema={yup.object().shape({
+          name: yup.string().required(),
           Salary: yup
             .number()
             .required("Please, provide your salary!")
@@ -72,6 +75,25 @@ export default function AddForm() {
                   //   name="salary"
                   textAlign="right"
                   style={styless.numberInput}
+                  placeholder="Name"
+                  returnKeyType={"done"}
+                  onChangeText={(value) => {
+                    props.setFieldValue("name", value);
+                  }}
+                  value={props.values.name}
+                />
+              </View>
+              <Text style={{ fontSize: 12, color: "#FF0D10" }}>
+                {props.errors.name}
+              </Text>
+              <View style={styless.rowContainer}>
+                <Text style={{ marginHorizontal: 10 }}>Salary</Text>
+
+                <TextInput
+                  clearButtonMode="always"
+                  //   name="salary"
+                  textAlign="right"
+                  style={styless.numberInput}
                   placeholder="Salary"
                   keyboardType="number-pad"
                   returnKeyType={"done"}
@@ -81,7 +103,9 @@ export default function AddForm() {
                   value={props.values.Salary.toString()}
                 />
               </View>
-
+              <Text style={{ fontSize: 12, color: "#FF0D10" }}>
+                {props.errors.Salary}
+              </Text>
               <View style={styless.rowContainer}>
                 <Text style={{ marginHorizontal: 10 }}>
                   Pension contribution
@@ -102,7 +126,7 @@ export default function AddForm() {
                 />
               </View>
               <Text style={{ fontSize: 12, color: "#FF0D10" }}>
-                {props.errors.Salary}
+                {props.errors.Pension}
               </Text>
 
               <TouchableOpacity

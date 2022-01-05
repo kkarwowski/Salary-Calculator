@@ -8,7 +8,8 @@ import {
   FlatList,
   ScrollView,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { salariesContext } from "./utils/context";
+import { useState, useEffect, useContext } from "react";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -21,6 +22,8 @@ import { getData, storeData } from "./utils/dataStorage";
 import { TransitionSpecs } from "@react-navigation/stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 import CustomButtonText from "./components/CustomButtonText";
+import { createContext } from "react";
+
 export default function App() {
   const [pressedButton, setPressedButton] = useState("Annual");
   const Tab = createBottomTabNavigator();
@@ -122,7 +125,11 @@ export default function App() {
         </Text>
 
         <NavBar />
-        <CardList navigation={navigation} savedSalaries={savedSalaries} />
+        <CardList
+          navigation={navigation}
+          savedSalaries={savedSalaries}
+          setSavedSalaries={setSavedSalaries}
+        />
         <CustomButtonText text="test" onPress={() => storeData(testObject)} />
         <CustomButtonText
           text="test read"
@@ -133,9 +140,10 @@ export default function App() {
         <CustomButtonText
           text="read obj"
           onPress={() =>
-            Object.keys(savedSalaries).map((key) => {
-              console.log(savedSalaries[key].salary);
-            })
+            // Object.keys(savedSalaries).map((key) => {
+            //   console.log(savedSalaries[key].salary);
+            // })
+            console.log("ALL SALARIES", savedSalaries)
           }
         />
       </SafeAreaView>
@@ -203,59 +211,61 @@ export default function App() {
     );
   };
   return (
-    <NavigationContainer theme={MyTheme}>
-      <Tab.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Tab.Screen
-          name="Saved Salaries"
-          component={HomeScreen}
-          options={{
-            tabBarStyle: {
-              backgroundColor: "#f7d13f",
-            },
+    <salariesContext.Provider value={{ savedSalaries, setSavedSalaries }}>
+      <NavigationContainer theme={MyTheme}>
+        <Tab.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Tab.Screen
+            name="Saved Salaries"
+            component={HomeScreen}
+            options={{
+              tabBarStyle: {
+                backgroundColor: "#f7d13f",
+              },
 
-            tabBarLabelStyle: {
-              fontSize: 13,
-              color: "black",
-              fontWeight: "500",
-            },
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name="home-circle"
-                color={"#2f4858"}
-                size={30}
-              />
-            ),
-            // tabBarBadge: 3,
-          }}
-        />
-        <Tab.Screen
-          name="SecondScreen"
-          component={SecondScreen}
-          options={{
-            tabBarStyle: {
-              backgroundColor: "#f7d13f",
-            },
-            tabBarLabelStyle: {
-              fontSize: 13,
-              color: "black",
-              fontWeight: "500",
-            },
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name="tooltip-edit"
-                color={"#2f4858"}
-                size={30}
-              />
-            ),
-            // tabBarBadge: 3, tooltip-edit
-          }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+              tabBarLabelStyle: {
+                fontSize: 13,
+                color: "black",
+                fontWeight: "500",
+              },
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="home-circle"
+                  color={"#2f4858"}
+                  size={30}
+                />
+              ),
+              // tabBarBadge: 3,
+            }}
+          />
+          <Tab.Screen
+            name="SecondScreen"
+            component={SecondScreen}
+            options={{
+              tabBarStyle: {
+                backgroundColor: "#f7d13f",
+              },
+              tabBarLabelStyle: {
+                fontSize: 13,
+                color: "black",
+                fontWeight: "500",
+              },
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="tooltip-edit"
+                  color={"#2f4858"}
+                  size={30}
+                />
+              ),
+              // tabBarBadge: 3, tooltip-edit
+            }}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </salariesContext.Provider>
   );
 }
 

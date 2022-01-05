@@ -5,23 +5,16 @@ import {
   SafeAreaView,
   FlatList,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import { Chip } from "react-native-paper";
 import CustomButtonIcon from "./CustomTouchButton";
-export default function CardList({ navigation, savedSalaries }) {
+import { useContext } from "react";
+import { salariesContext } from "../utils/context";
+export default function CardList({ navigation }) {
+  const { savedSalaries, setSavedSalaries } = useContext(salariesContext);
+
   //   generateBoxShadowStyle(-2, 4, "#171717", 0.2, 3, 4, "#171717");
-  const DATA = [
-    {
-      id: "1",
-      name: "Mine",
-      salary: "80000",
-    },
-    {
-      id: "2",
-      name: "yours",
-      salary: "20000",
-    },
-  ];
 
   //   const randomColorGenerator = () => {
   //     var randomColor = Math.floor(Math.random() * 16777215).toString(16);
@@ -35,7 +28,9 @@ export default function CardList({ navigation, savedSalaries }) {
           name="add-circle"
           size={50}
           color={"#2f4858"}
-          onPress={() => navigation.navigate("AddScreen")}
+          onPress={() =>
+            navigation.navigate("AddScreen", savedSalaries, setSavedSalaries)
+          }
         />
       </View>
     );
@@ -72,6 +67,7 @@ export default function CardList({ navigation, savedSalaries }) {
                 </Chip>
               </View>
               {/* <Text>{item.name}</Text> */}
+              <Text>{savedSalaries[item].pension}</Text>
               <Text>{savedSalaries[item].salary}</Text>
             </View>
           </TouchableOpacity>
