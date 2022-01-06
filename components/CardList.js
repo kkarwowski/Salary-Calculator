@@ -7,10 +7,17 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { Chip } from "react-native-paper";
 import CustomButtonIcon from "./CustomTouchButton";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { salariesContext } from "../utils/context";
+import { PanGestureHandler } from "react-native-gesture-handler";
+import Animated, {
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 export default function CardList({ navigation }) {
   const { savedSalaries, setSavedSalaries } = useContext(salariesContext);
 
@@ -21,62 +28,67 @@ export default function CardList({ navigation }) {
   //     return "#" + randomColor;
   //   };
 
-  const AddTaskButton = () => {
+  const ListItem = ({ obj }) => {
+    // const translateX = useSharedValue(0);
+    // const panGesture = useAnimatedGestureHandler({
+    //   onActive: (event) => {
+    //     translateX.value = event.translationX;
+    //   },
+    //   onEnd: () => {},
+    // });
+    // const rStyle = useAnimatedStyle(() => ({
+    //   transform: [
+    //     {
+    //       translateX: translateX.value,
+    //     },
+    //   ],
+    // }));
+    // console.log("ff", reff.PanGestureHandlerProps.simultaneousHandlers);
     return (
-      <View style={{ alignItems: "center" }}>
-        <CustomButtonIcon
-          name="add-circle"
-          size={50}
-          color={"#2f4858"}
-          onPress={() =>
-            navigation.navigate("AddScreen", savedSalaries, setSavedSalaries)
-          }
-        />
-      </View>
+      // <PanGestureHandler
+      //   simultaneousHandlers={reff.simultaneousHandlers}
+      //   onGestureEvent={panGesture}
+      // >
+      //   <Animated.View style={[rStyle]}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("DetailsScreen", {
+            salary: savedSalaries[obj].salary,
+            pension: savedSalaries[obj].pension,
+            key: obj,
+          });
+        }}
+      >
+        <View style={[styles.card, styles.boxShadow]}>
+          <View style={{ alignItems: "flex-start", flexDirection: "row" }}>
+            <Chip
+              style={{
+                // backgroundColor: randomColorGenerator(),
+                backgroundColor: "black",
+                padding: 0,
+              }}
+            >
+              <Text style={{ color: "white" }}>{obj}</Text>
+            </Chip>
+          </View>
+          {/* <Text>{item.name}</Text> */}
+          <Text>{savedSalaries[obj].pension}</Text>
+          <Text>{savedSalaries[obj].salary}</Text>
+        </View>
+      </TouchableOpacity>
+      //   </Animated.View>
+      // </PanGestureHandler>
     );
   };
-
+  const scrollReff = useRef(null);
   return (
     <View style={styles.cardContainer}>
-      <FlatList
-        contentContainerStyle={{
-          justifyContent: "flex-start",
-          flex: 1,
-          backgroundColor: "#f7d13f",
-        }}
-        //   contentContainerStyle={styles.cardContainer}
-        // data={DATA}
-        data={savedSalaries && Object.keys(savedSalaries)}
-        ListFooterComponent={<AddTaskButton />}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("DetailsScreen", {
-                salary: savedSalaries[item].salary,
-                pension: savedSalaries[item].pension,
-              });
-            }}
-          >
-            <View style={[styles.card, styles.boxShadow]}>
-              <View style={{ alignItems: "flex-start", flexDirection: "row" }}>
-                <Chip
-                  style={{
-                    // backgroundColor: randomColorGenerator(),
-                    backgroundColor: "black",
-                    padding: 0,
-                  }}
-                >
-                  <Text style={{ color: "white" }}>{item}</Text>
-                </Chip>
-              </View>
-              {/* <Text>{item.name}</Text> */}
-              <Text>{savedSalaries[item].pension}</Text>
-              <Text>{savedSalaries[item].salary}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item}
-      />
+      <ScrollView style={{ flex: 1 }} ref={scrollReff}>
+        {savedSalaries &&
+          Object.keys(savedSalaries).map((obj) => {
+            return <ListItem obj={obj} reff={scrollReff} key={obj} />;
+          })}
+      </ScrollView>
     </View>
   );
 }

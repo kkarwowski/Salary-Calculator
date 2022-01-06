@@ -17,7 +17,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import DropDownPicker from "react-native-dropdown-picker";
 import CustomButtonText from "./CustomButtonText";
 import { salariesContext } from "../utils/context";
-export default function AddForm({}) {
+export default function AddForm({ navigation }) {
   const [valuee, setValuee] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(true);
   const { savedSalaries, setSavedSalaries } = useContext(salariesContext);
@@ -36,9 +36,12 @@ export default function AddForm({}) {
             ...savedSalaries,
             [values.name]: { salary: values.Salary, pension: values.Pension },
           };
+          () => {
+            navigation.navigate("Home");
+          };
+
           setSavedSalaries(newSavedSalaries);
           storeData(newSavedSalaries);
-          //   console.log(values);
         }}
         validationSchema={yup.object().shape({
           name: yup.string().required(),

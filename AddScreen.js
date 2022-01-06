@@ -24,13 +24,13 @@ export default function AddScreen({ navigation }) {
         <CustomButtonIcon
           size={40}
           color="black"
-          name="close"
+          name="arrow-back"
           size={40}
           onPress={() => navigation.goBack()}
         />
       </View>
       <Text>Add Salary</Text>
-      <AddForm />
+      <AddForm navigation={navigation} />
 
       {/* <Button title="Go/Back" onPress={() => navigation.goBack()} /> */}
     </SafeAreaView>

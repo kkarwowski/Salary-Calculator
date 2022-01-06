@@ -33,4 +33,5 @@ const deleteAllItems = async () => {
     // error reading value
   }
 };
+
 export { storeData, getData, deleteAllItems };

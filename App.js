@@ -113,23 +113,6 @@ export default function App() {
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <Text>Second Screen</Text>
         <Button title="Go back" onPress={() => navigation.goBack()} />
-      </View>
-    );
-  }
-
-  const Home = ({ navigation }) => {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Text style={{ fontSize: 20, padding: 20, fontWeight: "600" }}>
-          Saved Salaries
-        </Text>
-
-        <NavBar />
-        <CardList
-          navigation={navigation}
-          savedSalaries={savedSalaries}
-          setSavedSalaries={setSavedSalaries}
-        />
         <CustomButtonText text="test" onPress={() => storeData(testObject)} />
         <CustomButtonText
           text="test read"
@@ -147,6 +130,38 @@ export default function App() {
           }
         />
         <CustomButtonText text="Detele ALL" onPress={() => deleteAllItems()} />
+      </View>
+    );
+  }
+
+  const AddTaskButton = ({ navigation }) => {
+    return (
+      <View style={{ alignItems: "center" }}>
+        <CustomButtonIcon
+          name="add-circle"
+          size={50}
+          color={"#2f4858"}
+          onPress={() =>
+            navigation.navigate("AddScreen", savedSalaries, setSavedSalaries)
+          }
+        />
+      </View>
+    );
+  };
+  const Home = ({ navigation }) => {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={{ fontSize: 20, padding: 20, fontWeight: "600" }}>
+          Saved Salaries
+        </Text>
+
+        <NavBar />
+        <AddTaskButton navigation={navigation} />
+        <CardList
+          navigation={navigation}
+          savedSalaries={savedSalaries}
+          setSavedSalaries={setSavedSalaries}
+        />
       </SafeAreaView>
     );
   };
