@@ -31,15 +31,14 @@ export default function AddForm({ navigation }) {
           Pension: 4,
           EnglishTax: false,
         }}
+        navigation={navigation}
         onSubmit={(values) => {
           const newSavedSalaries = {
             ...savedSalaries,
             [values.name]: { salary: values.Salary, pension: values.Pension },
           };
-          () => {
-            navigation.navigate("Home");
-          };
 
+          navigation.navigate("Home");
           setSavedSalaries(newSavedSalaries);
           storeData(newSavedSalaries);
         }}
