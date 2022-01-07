@@ -8,7 +8,7 @@ import {
   FlatList,
   ScrollView,
 } from "react-native";
-import { salariesContext } from "./utils/context";
+import { salariesContext, navChosenDevider } from "./utils/context";
 import { useState, useEffect, useContext } from "react";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -23,12 +23,12 @@ import { TransitionSpecs } from "@react-navigation/stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 import CustomButtonText from "./components/CustomButtonText";
 import { createContext } from "react";
-
+import NavBar from "./components/NavBar";
 export default function App() {
-  const [pressedButton, setPressedButton] = useState("Annual");
   const Tab = createBottomTabNavigator();
   const Stack = createNativeStackNavigator();
   const [savedSalaries, setSavedSalaries] = useState();
+  const [pressedButton, setPressedButton] = useState("Annual");
 
   useEffect(() => {
     getAndSetSalaries();
@@ -166,121 +166,63 @@ export default function App() {
     );
   };
 
-  const NavBar = () => {
-    return (
-      <View style={styles.topNavContainer}>
-        <ButtonNav
-          onPress={() => {
-            calculate(salary), setPressedButton("Annual");
-          }}
-          title="Annual"
-        ></ButtonNav>
-        <ButtonNav
-          onPress={() => {
-            calculate(salary), setPressedButton("Monthly");
-          }}
-          title="Monthly"
-        ></ButtonNav>
-        <ButtonNav
-          onPress={() => {
-            calculate(salary), setPressedButton("Weekly");
-          }}
-          title="Weekly"
-        ></ButtonNav>
-        <ButtonNav
-          onPress={() => {
-            calculate(salary), setPressedButton("Daily");
-          }}
-          title="Daily"
-        ></ButtonNav>
-        <ButtonNav
-          onPress={() => {
-            calculate(salary), setPressedButton("Hourly");
-          }}
-          title="Hourly"
-        ></ButtonNav>
-      </View>
-    );
-  };
-
-  const ButtonNav = (props) => {
-    const { onPress, title } = props;
-    return (
-      <Pressable
-        style={{
-          ...styles.buttonNav,
-          // backgroundColor: title === pressedButton ? "#205a6d" : "#3596b5",
-          // backgroundColor: title === pressedButton ? "#002982" : "#2690ff",
-          backgroundColor: title === pressedButton ? "#006e5d" : "#f2fedc",
-        }}
-        onPress={onPress}
-      >
-        <Text
-          style={{
-            ...styles.ButtonText,
-            color: title === pressedButton ? "white" : "black",
-          }}
-        >
-          {title}
-        </Text>
-      </Pressable>
-    );
-  };
   return (
     <salariesContext.Provider value={{ savedSalaries, setSavedSalaries }}>
-      <NavigationContainer theme={MyTheme}>
-        <Tab.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <Tab.Screen
-            name="Saved Salaries"
-            component={HomeScreen}
-            options={{
-              tabBarStyle: {
-                backgroundColor: "#f7d13f",
-              },
+      <navChosenDevider.Provider value={{ pressedButton, setPressedButton }}>
+        <NavigationContainer theme={MyTheme}>
+          <Tab.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            <Tab.Screen
+              name="Saved Salaries"
+              component={HomeScreen}
+              options={{
+                tabBarStyle: {
+                  backgroundColor: "#f7d13f",
+                },
 
-              tabBarLabelStyle: {
-                fontSize: 13,
-                color: "black",
-                fontWeight: "500",
-              },
-              tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="home-circle"
-                  color={"#2f4858"}
-                  size={30}
-                />
-              ),
-              // tabBarBadge: 3,
-            }}
-          />
-          <Tab.Screen
-            name="SecondScreen"
-            component={SecondScreen}
-            options={{
-              tabBarStyle: {
-                backgroundColor: "#f7d13f",
-              },
-              tabBarLabelStyle: {
-                fontSize: 13,
-                color: "black",
-                fontWeight: "500",
-              },
-              tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="tooltip-edit"
-                  color={"#2f4858"}
-                  size={30}
-                />
-              ),
-              // tabBarBadge: 3, tooltip-edit
-            }}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
+                tabBarLabelStyle: {
+                  fontSize: 13,
+                  color: "black",
+                  fontWeight: "500",
+                },
+                tabBarIcon: ({ color, size }) => (
+                  <MaterialCommunityIcons
+                    name="home-circle"
+                    color={"#2f4858"}
+                    size={30}
+                  />
+                ),
+                // tabBarBadge: 3,
+              }}
+            />
+            <Tab.Screen
+              name="SecondScreen"
+              component={SecondScreen}
+              options={{
+                tabBarStyle: {
+                  backgroundColor: "#f7d13f",
+                },
+                tabBarLabelStyle: {
+                  fontSize: 13,
+                  color: "black",
+                  fontWeight: "500",
+                },
+                tabBarIcon: ({ color, size }) => (
+                  <MaterialCommunityIcons
+                    name="tooltip-edit"
+                    color={"#2f4858"}
+                    size={30}
+                  />
+                ),
+                // tabBarBadge: 3, tooltip-edit
+              }}
+            />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </navChosenDevider.Provider>
     </salariesContext.Provider>
   );
 }
@@ -293,31 +235,5 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "flex-start",
     margin: 10,
-  },
-  buttonNav: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    elevation: 10,
-    backgroundColor: "#f2fedc",
-  },
-  ButtonText: {
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: "normal",
-    letterSpacing: 0.25,
-    color: "black",
-  },
-  topNavContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    // backgroundColor: "#2690ff",
-    backgroundColor: "#f2fedc",
-
-    borderRadius: 10,
-    width: "100%",
   },
 });
