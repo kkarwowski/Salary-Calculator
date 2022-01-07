@@ -28,7 +28,6 @@ export default function App() {
   const Tab = createBottomTabNavigator();
   const Stack = createNativeStackNavigator();
   const [savedSalaries, setSavedSalaries] = useState();
-  const [pressedButton, setPressedButton] = useState("Annual");
 
   useEffect(() => {
     getAndSetSalaries();
@@ -155,7 +154,7 @@ export default function App() {
           Saved Salaries
         </Text>
 
-        <NavBar />
+        {/* <NavBar /> */}
         <AddTaskButton navigation={navigation} />
         <CardList
           navigation={navigation}
@@ -168,61 +167,61 @@ export default function App() {
 
   return (
     <salariesContext.Provider value={{ savedSalaries, setSavedSalaries }}>
-      <navChosenDevider.Provider value={{ pressedButton, setPressedButton }}>
-        <NavigationContainer theme={MyTheme}>
-          <Tab.Navigator
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            <Tab.Screen
-              name="Saved Salaries"
-              component={HomeScreen}
-              options={{
-                tabBarStyle: {
-                  backgroundColor: "#f7d13f",
-                },
+      {/* <navChosenDevider.Provider value={{ pressedButton, setPressedButton }}> */}
+      <NavigationContainer theme={MyTheme}>
+        <Tab.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Tab.Screen
+            name="Saved Salaries"
+            component={HomeScreen}
+            options={{
+              tabBarStyle: {
+                backgroundColor: "#f7d13f",
+              },
 
-                tabBarLabelStyle: {
-                  fontSize: 13,
-                  color: "black",
-                  fontWeight: "500",
-                },
-                tabBarIcon: ({ color, size }) => (
-                  <MaterialCommunityIcons
-                    name="home-circle"
-                    color={"#2f4858"}
-                    size={30}
-                  />
-                ),
-                // tabBarBadge: 3,
-              }}
-            />
-            <Tab.Screen
-              name="SecondScreen"
-              component={SecondScreen}
-              options={{
-                tabBarStyle: {
-                  backgroundColor: "#f7d13f",
-                },
-                tabBarLabelStyle: {
-                  fontSize: 13,
-                  color: "black",
-                  fontWeight: "500",
-                },
-                tabBarIcon: ({ color, size }) => (
-                  <MaterialCommunityIcons
-                    name="tooltip-edit"
-                    color={"#2f4858"}
-                    size={30}
-                  />
-                ),
-                // tabBarBadge: 3, tooltip-edit
-              }}
-            />
-          </Tab.Navigator>
-        </NavigationContainer>
-      </navChosenDevider.Provider>
+              tabBarLabelStyle: {
+                fontSize: 13,
+                color: "black",
+                fontWeight: "500",
+              },
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="home-circle"
+                  color={"#2f4858"}
+                  size={30}
+                />
+              ),
+              // tabBarBadge: 3,
+            }}
+          />
+          <Tab.Screen
+            name="SecondScreen"
+            component={SecondScreen}
+            options={{
+              tabBarStyle: {
+                backgroundColor: "#f7d13f",
+              },
+              tabBarLabelStyle: {
+                fontSize: 13,
+                color: "black",
+                fontWeight: "500",
+              },
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="tooltip-edit"
+                  color={"#2f4858"}
+                  size={30}
+                />
+              ),
+              // tabBarBadge: 3, tooltip-edit
+            }}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+      {/* </navChosenDevider.Provider> */}
     </salariesContext.Provider>
   );
 }
