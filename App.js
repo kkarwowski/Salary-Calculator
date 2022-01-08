@@ -2,12 +2,17 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   Pressable,
   Button,
   FlatList,
-  ScrollView,
+  TouchableOpacity,
 } from "react-native";
+import GlobalStyles from "./utils/GobalStyles";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { CountUp } from "use-count-up";
+import { salaryPerSetting } from "./utils/salaryPerSetting";
+import { Chip } from "react-native-paper";
+import { ScrollView } from "react-native-gesture-handler";
 import { salariesContext, navChosenDevider } from "./utils/context";
 import { useState, useEffect, useContext } from "react";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
@@ -17,17 +22,17 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import DetailsScreen from "./DetailsScreen";
 import AddScreen from "./AddScreen";
 import CustomButtonIcon from "./components/CustomTouchButton";
-import CardList from "./components/CardList";
+// import CardList from "./components/CardList";
 import { getData, storeData, deleteAllItems } from "./utils/dataStorage";
 import { TransitionSpecs } from "@react-navigation/stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 import CustomButtonText from "./components/CustomButtonText";
 import { createContext } from "react";
-import NavBar from "./components/NavBar";
 export default function App() {
   const Tab = createBottomTabNavigator();
   const Stack = createNativeStackNavigator();
   const [savedSalaries, setSavedSalaries] = useState();
+  const [pressedButton1, setPressedButton1] = useState("Annual");
 
   useEffect(() => {
     getAndSetSalaries();
@@ -57,8 +62,8 @@ export default function App() {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      // background: "#e3f0ff",
-      background: "#f7d13f",
+      // background: "yellow",
+      background: GlobalStyles.mainBackgroundColor.backgroundColor,
 
       margin: 10,
     },
@@ -75,6 +80,67 @@ export default function App() {
     },
   };
 
+  function ButtonNav({ title, onPress }) {
+    return (
+      <Pressable
+        style={{
+          ...styles.buttonNav,
+          backgroundColor:
+            title === pressedButton1
+              ? GlobalStyles.navActive.backgroundColor
+              : GlobalStyles.navBackground.backgroundColor,
+        }}
+        onPress={onPress}
+      >
+        <Text
+          style={{
+            ...styles.ButtonText,
+            color: title === pressedButton1 ? "black" : "white",
+          }}
+        >
+          {title}
+        </Text>
+      </Pressable>
+    );
+  }
+  function NavBar(props) {
+    const { onPress, title } = props;
+
+    return (
+      <View style={styles.topNavContainer}>
+        <ButtonNav
+          onPress={() => {
+            setPressedButton1("Annual");
+          }}
+          title="Annual"
+        ></ButtonNav>
+        <ButtonNav
+          onPress={() => {
+            setPressedButton1("Monthly");
+          }}
+          title="Monthly"
+        ></ButtonNav>
+        <ButtonNav
+          onPress={() => {
+            setPressedButton1("Weekly");
+          }}
+          title="Weekly"
+        ></ButtonNav>
+        <ButtonNav
+          onPress={() => {
+            setPressedButton1("Daily");
+          }}
+          title="Daily"
+        ></ButtonNav>
+        <ButtonNav
+          onPress={() => {
+            setPressedButton1("Hourly");
+          }}
+          title="Hourly"
+        ></ButtonNav>
+      </View>
+    );
+  }
   function HomeScreen() {
     return (
       <Stack.Navigator>
@@ -147,21 +213,128 @@ export default function App() {
       </View>
     );
   };
+
+  const ListItem = ({ obj, navigation }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("DetailsScreen", {
+            salary: savedSalaries[obj].salary,
+            pension: savedSalaries[obj].pension,
+            key: obj,
+          });
+        }}
+      >
+        <View style={[styles.card, styles.boxShadow]}>
+          <View
+            style={{
+              justifyContent: "space-between",
+              flex: 1,
+              flexDirection: "row",
+              alignContent: "space-between",
+            }}
+          >
+            <Chip
+              style={{
+                // backgroundColor: randomColorGenerator(),
+                backgroundColor: "black",
+                padding: 0,
+              }}
+            >
+              <Text style={{ color: "white" }}>{obj}</Text>
+            </Chip>
+            <Text>
+              £{" "}
+              <CountUp
+                isCounting
+                end={salaryPerSetting(
+                  savedSalaries[obj].salary,
+                  pressedButton1
+                )}
+                key={salaryPerSetting(
+                  savedSalaries[obj].salary,
+                  pressedButton1
+                )}
+                duration={0.2}
+                decimalPlaces={2}
+              />
+            </Text>
+          </View>
+          {/* <Text>{savedSalaries[obj].pension}</Text> */}
+        </View>
+      </TouchableOpacity>
+    );
+  };
   const Home = ({ navigation }) => {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        {/* <SafeAreaView style={styles.container}> */}
         <Text style={{ fontSize: 20, padding: 20, fontWeight: "600" }}>
           Saved Salaries
         </Text>
 
-        {/* <NavBar /> */}
+        <NavBar />
         <AddTaskButton navigation={navigation} />
-        <CardList
-          navigation={navigation}
-          savedSalaries={savedSalaries}
-          setSavedSalaries={setSavedSalaries}
-        />
-      </SafeAreaView>
+
+        <View style={styles.cardContainer}>
+          <ScrollView style={{ flex: 1 }}>
+            {savedSalaries &&
+              Object.keys(savedSalaries).map((obj) => {
+                // return <ListItem obj={obj} key={obj} navigation={navigation} />;
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("DetailsScreen", {
+                        salary: savedSalaries[obj].salary,
+                        pension: savedSalaries[obj].pension,
+                        key: obj,
+                      });
+                    }}
+                  >
+                    <View style={[styles.card, styles.boxShadow]}>
+                      <View
+                        style={{
+                          alignItems: "flex-start",
+                          flexDirection: "row",
+                        }}
+                      >
+                        <Chip
+                          style={{
+                            // backgroundColor: randomColorGenerator(),
+                            backgroundColor: "black",
+                            padding: 0,
+                          }}
+                        >
+                          <Text style={{ color: "white" }}>{obj}</Text>
+                        </Chip>
+                      </View>
+                      {/* <Text>{savedSalaries[obj].pension}</Text> */}
+                      <Text>
+                        £{" "}
+                        <CountUp
+                          isCounting
+                          end={salaryPerSetting(
+                            savedSalaries[obj].salary,
+                            pressedButton1
+                          )}
+                          key={salaryPerSetting(
+                            savedSalaries[obj].salary,
+                            pressedButton1
+                          )}
+                          duration={0.2}
+                          decimalPlaces={2}
+                        />
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+          </ScrollView>
+        </View>
+
+        {/* <CardList navigation={navigation} pressedButton={pressedButton} /> */}
+        {/* </SafeAreaView> */}
+      </View>
     );
   };
 
@@ -179,7 +352,8 @@ export default function App() {
             component={HomeScreen}
             options={{
               tabBarStyle: {
-                backgroundColor: "#f7d13f",
+                backgroundColor:
+                  GlobalStyles.mainBackgroundColor.backgroundColor,
               },
 
               tabBarLabelStyle: {
@@ -202,7 +376,8 @@ export default function App() {
             component={SecondScreen}
             options={{
               tabBarStyle: {
-                backgroundColor: "#f7d13f",
+                backgroundColor:
+                  GlobalStyles.mainBackgroundColor.backgroundColor,
               },
               tabBarLabelStyle: {
                 fontSize: 13,
@@ -229,10 +404,50 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f7d13f",
+    // backgroundColor: "#f7d13f",
+    backgroundColor: GlobalStyles.mainBackgroundColor.backgroundColor,
     alignItems: "center",
     alignContent: "center",
     justifyContent: "flex-start",
     margin: 10,
+    paddingTop: 20,
+  },
+  topNavContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    backgroundColor: GlobalStyles.navBackground.backgroundColor,
+    borderRadius: 10,
+    width: "100%",
+  },
+  buttonNav: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    elevation: 10,
+    // backgroundColor: GlobalStyles.bluegray.backgroundColor,
+  },
+  ButtonText: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "normal",
+    letterSpacing: 0.25,
+    color: "black",
+  },
+  cardContainer: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: GlobalStyles.mainBackgroundColor.backgroundColor,
+    marginVertical: 5,
+  },
+  card: {
+    backgroundColor: GlobalStyles.light.backgroundColor,
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginVertical: 5,
+    marginHorizontal: 10,
   },
 });

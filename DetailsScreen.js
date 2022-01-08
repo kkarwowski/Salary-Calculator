@@ -7,6 +7,8 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
+import GobalStyles from "./utils/GobalStyles";
+import { salaryPerSetting } from "./utils/salaryPerSetting";
 import CustomButtonIcon from "./components/CustomTouchButton";
 import { storeData } from "./utils/dataStorage";
 import calculateFunction from "./utils/calculateFunction";
@@ -46,7 +48,7 @@ const DetailsScreen = ({ route, navigation }) => {
         { x: "Pension", y: parseInt(pensionContibution) },
         { x: "Take home", y: parseInt(Takehome) },
       ]);
-    }, 500);
+    }, 100);
   }, []);
   const { savedSalaries, setSavedSalaries } = useContext(salariesContext);
 
@@ -112,20 +114,6 @@ const DetailsScreen = ({ route, navigation }) => {
       </View>
     );
   };
-  const salaryPerSetting = (salary, setting) => {
-    switch (setting) {
-      case "Annual":
-        return salary;
-      case "Monthly":
-        return parseFloat(salary / 12).toFixed(2);
-      case "Weekly":
-        return parseFloat(salary / 52).toFixed(2);
-      case "Daily":
-        return parseFloat(salary / 365).toFixed(2);
-      case "Hourly":
-        return parseFloat(salary / 2080).toFixed(2);
-    }
-  };
 
   function renderChart() {
     return (
@@ -135,13 +123,13 @@ const DetailsScreen = ({ route, navigation }) => {
           // labels={["tax", "NI", "take Home", "np"]}
           colorScale={["red", "orange", "blue", "green"]}
           animate={{
-            duration: 4000,
+            duration: 100,
             // onEnter: {
             //   duration: 1000,
             // },
-            onLoad: {
-              delay: 2000,
-            },
+            // onLoad: {
+            //   delay: 2000,
+            // },
           }}
           width={300}
           height={250}
@@ -203,8 +191,10 @@ const DetailsScreen = ({ route, navigation }) => {
               £{" "}
               <CountUp
                 isCounting
-                end={salaryPerSetting("3000", pressedButton)}
-                // duration={1}
+                end={salaryPerSetting(salary, pressedButton)}
+                key={salaryPerSetting(salary, pressedButton)}
+                duration={0.2}
+                decimalPlaces={2}
               />
             </Text>
           </View>
@@ -224,7 +214,9 @@ const DetailsScreen = ({ route, navigation }) => {
                   <CountUp
                     isCounting
                     end={salaryPerSetting(data.y, pressedButton)}
-                    duration={1}
+                    key={salaryPerSetting(data.y, pressedButton)}
+                    duration={0.2}
+                    decimalPlaces={2}
                   />
                 </Text>
               </View>
@@ -274,7 +266,7 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     height: "96%",
     // flex: 1,
-    backgroundColor: "#e3f0ff",
+    backgroundColor: GobalStyles.light.backgroundColor,
     alignItems: "center",
     justifyContent: "flex-start",
   },

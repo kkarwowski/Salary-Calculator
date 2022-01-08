@@ -6,7 +6,7 @@ import {
   Button,
   TextInput,
 } from "react-native";
-
+import GlobalStyles from "./utils/GobalStyles";
 import AddForm from "./components/AddForm";
 import CustomButtonIcon from "./components/CustomTouchButton";
 export default function AddScreen({ navigation }) {
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     margin: 10,
     flex: 1,
     // backgroundColor: "#f7d13f",
-    backgroundColor: "#F7753F",
+    backgroundColor: GlobalStyles.mainBackgroundColor.backgroundColor,
     alignItems: "center",
     justifyContent: "flex-start",
   },

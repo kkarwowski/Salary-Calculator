@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { navChosenDevider } from "../utils/context";
 import ButtonNav from "./ButtonNav";
 export default function () {
-  const { pressedButton, setPressedButton } = useContext(navChosenDevider);
+  // const { pressedButton, setPressedButton } = useContext(navChosenDevider);
   return (
     <View style={styles.topNavContainer}>
       <ButtonNav
