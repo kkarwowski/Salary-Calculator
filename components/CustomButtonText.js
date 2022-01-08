@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     elevation: 10,
-
+    width: "100%",
     // marginHorizontal: 2,
   },
 });

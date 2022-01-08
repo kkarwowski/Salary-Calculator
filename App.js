@@ -28,12 +28,12 @@ import { TransitionSpecs } from "@react-navigation/stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 import CustomButtonText from "./components/CustomButtonText";
 import { createContext } from "react";
+import calculateFunction from "./utils/calculateFunction";
 export default function App() {
   const Tab = createBottomTabNavigator();
   const Stack = createNativeStackNavigator();
   const [savedSalaries, setSavedSalaries] = useState();
   const [pressedButton1, setPressedButton1] = useState("Annual");
-
   useEffect(() => {
     getAndSetSalaries();
   }, []);
@@ -205,7 +205,7 @@ export default function App() {
         <CustomButtonIcon
           name="add-circle"
           size={50}
-          color={"#2f4858"}
+          color={GlobalStyles.yellow.backgroundColor}
           onPress={() =>
             navigation.navigate("AddScreen", savedSalaries, setSavedSalaries)
           }
@@ -215,6 +215,11 @@ export default function App() {
   };
 
   const ListItem = ({ obj, navigation }) => {
+    const { Takehome } = calculateFunction(
+      savedSalaries[obj].salary,
+      savedSalaries[obj].pension
+    );
+    console.log("take home", savedSalaries[obj].pension);
     return (
       <TouchableOpacity
         onPress={() => {
@@ -228,37 +233,74 @@ export default function App() {
         <View style={[styles.card, styles.boxShadow]}>
           <View
             style={{
-              justifyContent: "space-between",
-              flex: 1,
+              // justifyContent: "flex-end",
               flexDirection: "row",
-              alignContent: "space-between",
+              flexWrap: "wrap",
+              width: "100%",
             }}
           >
-            <Chip
+            <View
               style={{
-                // backgroundColor: randomColorGenerator(),
                 backgroundColor: "black",
-                padding: 0,
+                borderRadius: 20,
+                padding: 5,
+                paddingHorizontal: 10,
               }}
             >
               <Text style={{ color: "white" }}>{obj}</Text>
-            </Chip>
-            <Text>
-              £{" "}
-              <CountUp
-                isCounting
-                end={salaryPerSetting(
-                  savedSalaries[obj].salary,
-                  pressedButton1
-                )}
-                key={salaryPerSetting(
-                  savedSalaries[obj].salary,
-                  pressedButton1
-                )}
-                duration={0.2}
-                decimalPlaces={2}
-              />
-            </Text>
+            </View>
+            <View
+              style={{
+                paddingVertical: 5,
+                justifyContent: "space-between",
+                flexDirection: "row",
+                alignItem: "center",
+                width: "100%",
+              }}
+            >
+              <Text>Gross</Text>
+              <Text>
+                £{" "}
+                <CountUp
+                  isCounting
+                  end={salaryPerSetting(
+                    savedSalaries[obj].salary,
+                    pressedButton1
+                  )}
+                  key={salaryPerSetting(
+                    savedSalaries[obj].salary,
+                    pressedButton1
+                  )}
+                  duration={0.2}
+                  decimalPlaces={2}
+                />
+              </Text>
+            </View>
+
+            <View
+              style={{
+                justifyContent: "space-between",
+                flexDirection: "row",
+                alignItem: "center",
+                width: "100%",
+                paddingVertical: 5,
+              }}
+            >
+              <Text>Take Home</Text>
+              <Text>
+                £{" "}
+                <CountUp
+                  isCounting
+                  end={salaryPerSetting(Number(Takehome), pressedButton1)}
+                  key={salaryPerSetting(
+                    savedSalaries[obj].salary,
+                    pressedButton1
+                  )}
+                  duration={0.2}
+                  decimalPlaces={2}
+                />
+              </Text>
+            </View>
           </View>
           {/* <Text>{savedSalaries[obj].pension}</Text> */}
         </View>
@@ -269,7 +311,15 @@ export default function App() {
     return (
       <View style={styles.container}>
         {/* <SafeAreaView style={styles.container}> */}
-        <Text style={{ fontSize: 20, padding: 20, fontWeight: "600" }}>
+        <Text
+          style={{
+            fontSize: 20,
+            padding: 20,
+            paddingTop: 30,
+            fontWeight: "600",
+            color: GlobalStyles.light.backgroundColor,
+          }}
+        >
           Saved Salaries
         </Text>
 
@@ -280,54 +330,7 @@ export default function App() {
           <ScrollView style={{ flex: 1 }}>
             {savedSalaries &&
               Object.keys(savedSalaries).map((obj) => {
-                // return <ListItem obj={obj} key={obj} navigation={navigation} />;
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("DetailsScreen", {
-                        salary: savedSalaries[obj].salary,
-                        pension: savedSalaries[obj].pension,
-                        key: obj,
-                      });
-                    }}
-                  >
-                    <View style={[styles.card, styles.boxShadow]}>
-                      <View
-                        style={{
-                          alignItems: "flex-start",
-                          flexDirection: "row",
-                        }}
-                      >
-                        <Chip
-                          style={{
-                            // backgroundColor: randomColorGenerator(),
-                            backgroundColor: "black",
-                            padding: 0,
-                          }}
-                        >
-                          <Text style={{ color: "white" }}>{obj}</Text>
-                        </Chip>
-                      </View>
-                      {/* <Text>{savedSalaries[obj].pension}</Text> */}
-                      <Text>
-                        £{" "}
-                        <CountUp
-                          isCounting
-                          end={salaryPerSetting(
-                            savedSalaries[obj].salary,
-                            pressedButton1
-                          )}
-                          key={salaryPerSetting(
-                            savedSalaries[obj].salary,
-                            pressedButton1
-                          )}
-                          duration={0.2}
-                          decimalPlaces={2}
-                        />
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
+                return <ListItem obj={obj} key={obj} navigation={navigation} />;
               })}
           </ScrollView>
         </View>
@@ -351,20 +354,23 @@ export default function App() {
             name="Saved Salaries"
             component={HomeScreen}
             options={{
+              tabBarItemStyle: { borderWidth: 0, borderColor: "#101010" },
               tabBarStyle: {
+                paddingBottom: 0,
+                color: GlobalStyles.mainBackgroundColor.backgroundColor,
                 backgroundColor:
                   GlobalStyles.mainBackgroundColor.backgroundColor,
               },
 
               tabBarLabelStyle: {
                 fontSize: 13,
-                color: "black",
+                color: GlobalStyles.light.backgroundColor,
                 fontWeight: "500",
               },
               tabBarIcon: ({ color, size }) => (
                 <MaterialCommunityIcons
                   name="home-circle"
-                  color={"#2f4858"}
+                  color={GlobalStyles.yellow.backgroundColor}
                   size={30}
                 />
               ),
@@ -381,13 +387,13 @@ export default function App() {
               },
               tabBarLabelStyle: {
                 fontSize: 13,
-                color: "black",
+                color: GlobalStyles.light.backgroundColor,
                 fontWeight: "500",
               },
               tabBarIcon: ({ color, size }) => (
                 <MaterialCommunityIcons
                   name="tooltip-edit"
-                  color={"#2f4858"}
+                  color={GlobalStyles.yellow.backgroundColor}
                   size={30}
                 />
               ),

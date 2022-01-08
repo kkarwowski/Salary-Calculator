@@ -7,6 +7,7 @@ import {
   TextInput,
   Switch,
 } from "react-native";
+import GobalStyles from "../utils/GobalStyles";
 import Collapsible from "react-native-collapsible";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -159,12 +160,18 @@ export default function AddForm({ navigation }) {
                   </Text>
                   <Switch
                     name="EnglishTax"
-                    trackColor={{ false: "#767577", true: "red" }}
-                    thumbColor={props.values.EnglishTax ? "#f5dd4b" : "#f4f3f4"}
-                    ios_backgroundColor="white"
+                    trackColor={{
+                      false: GobalStyles.bluegray.backgroundColor,
+                      true: GobalStyles.bluegray.backgroundColor,
+                    }}
+                    thumbColor={
+                      props.values.EnglishTax
+                        ? GobalStyles.yellow.backgroundColor
+                        : GobalStyles.light.backgroundColor
+                    }
+                    ios_backgroundColor={GobalStyles.bluegray.backgroundColor}
                     onValueChange={(value) => {
                       props.setFieldValue("EnglishTax", value);
-                      console.log(value);
                     }}
                     value={props.values.EnglishTax}
                   />
@@ -189,11 +196,14 @@ export default function AddForm({ navigation }) {
                 color="black"
                 style={{ width: "100%" }}
               /> */}
-              <CustomButtonText
-                onPress={props.handleSubmit}
-                text="Save"
-                color="black"
-              />
+              <View style={{ width: "100%" }}>
+                <CustomButtonText
+                  onPress={props.handleSubmit}
+                  text="Save"
+                  color={GobalStyles.bluegray.backgroundColor}
+                  style={{ width: "100%" }}
+                />
+              </View>
             </View>
           );
         }}

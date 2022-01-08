@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     margin: 10,
     flex: 1,
     // backgroundColor: "#f7d13f",
-    backgroundColor: GlobalStyles.mainBackgroundColor.backgroundColor,
+    backgroundColor: GlobalStyles.light.backgroundColor,
     alignItems: "center",
     justifyContent: "flex-start",
   },
