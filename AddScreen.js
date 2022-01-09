@@ -11,7 +11,7 @@ import AddForm from "./components/AddForm";
 import CustomButtonIcon from "./components/CustomTouchButton";
 export default function AddScreen({ navigation }) {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View
         style={{
           justifyContent: "flex-start",
@@ -31,9 +31,7 @@ export default function AddScreen({ navigation }) {
       </View>
       <Text>Add Salary</Text>
       <AddForm navigation={navigation} />
-
-      {/* <Button title="Go/Back" onPress={() => navigation.goBack()} /> */}
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -43,7 +41,6 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     margin: 10,
     flex: 1,
-    // backgroundColor: "#f7d13f",
     backgroundColor: GlobalStyles.light.backgroundColor,
     alignItems: "center",
     justifyContent: "flex-start",

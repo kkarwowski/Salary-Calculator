@@ -39,7 +39,6 @@ export default function CardList({ navigation, pressedButton }) {
               <Text style={{ color: "white" }}>{obj}</Text>
             </Chip>
           </View>
-          {/* <Text>{savedSalaries[obj].pension}</Text> */}
           <Text>
             £{" "}
             <CountUp

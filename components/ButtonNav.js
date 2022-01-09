@@ -4,8 +4,6 @@ import { navChosenDevider } from "../utils/context";
 export default function ButtonNav(props) {
   const { onPress, title } = props;
   const { pressedButton, setPressedButton } = useContext(navChosenDevider);
-  console.log("button", pressedButton);
-
   return (
     <Pressable
       style={{

@@ -25,10 +25,7 @@ import AddScreen from "./AddScreen";
 import CustomButtonIcon from "./components/CustomTouchButton";
 // import CardList from "./components/CardList";
 import { getData, storeData, deleteAllItems } from "./utils/dataStorage";
-import { TransitionSpecs } from "@react-navigation/stack";
-import { CardStyleInterpolators } from "@react-navigation/stack";
 import CustomButtonText from "./components/CustomButtonText";
-import { createContext } from "react";
 import calculateFunction from "./utils/calculateFunction";
 export default function App() {
   const Tab = createBottomTabNavigator();
@@ -55,7 +52,6 @@ export default function App() {
       setSavedSalaries(JSON.parse(data));
       console.log(data, "yess");
     } else {
-      // setSavedSalaries(null);
       confirm.log(data);
     }
   };
@@ -63,9 +59,7 @@ export default function App() {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      // background: "yellow",
       background: GlobalStyles.mainBackgroundColor.backgroundColor,
-      // margin: 10,
     },
   };
   const config = {
@@ -157,11 +151,6 @@ export default function App() {
         <Stack.Screen
           name="DetailsScreen"
           component={DetailsScreen}
-          // options={{
-          //   headerShown: false,
-          //   gestureEnabled: false,
-          //   cardStyleInterpolator: forFade,
-          // }}
           options={{
             headerShown: false,
             transitionSpec: {
@@ -233,7 +222,6 @@ export default function App() {
         <View style={[styles.card, styles.boxShadow]}>
           <View
             style={{
-              // justifyContent: "flex-end",
               flexDirection: "row",
               flexWrap: "wrap",
               width: "100%",
@@ -346,7 +334,6 @@ export default function App() {
   return (
     <SafeAreaProvider>
     <salariesContext.Provider value={{ savedSalaries, setSavedSalaries }}>
-      {/* <navChosenDevider.Provider value={{ pressedButton, setPressedButton }}> */}
       <NavigationContainer theme={MyTheme}>
         <Tab.Navigator
  
@@ -405,7 +392,6 @@ export default function App() {
           />
         </Tab.Navigator>
       </NavigationContainer>
-      {/* </navChosenDevider.Provider> */}
     </salariesContext.Provider>
     </SafeAreaProvider>
 
@@ -451,7 +437,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     backgroundColor: GlobalStyles.mainBackgroundColor.backgroundColor,
-    // marginVertical: 5,
   },
   card: {
     backgroundColor: GlobalStyles.light.backgroundColor,
@@ -459,10 +444,5 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     marginVertical: 5,
-    // marginHorizontal: 10,
   },
-  containerBottomTabs: {
-    //backgroundColor: Colors.darkBackgroundColor
-    borderTopWidth: 0
-}
 });
