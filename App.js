@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import GlobalStyles from "./utils/GobalStyles";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView , SafeAreaProvider, useSafeAreaInsets} from "react-native-safe-area-context";
+
 import { CountUp } from "use-count-up";
 import { salaryPerSetting } from "./utils/salaryPerSetting";
 import { Chip } from "react-native-paper";
@@ -64,8 +65,7 @@ export default function App() {
       ...DefaultTheme.colors,
       // background: "yellow",
       background: GlobalStyles.mainBackgroundColor.backgroundColor,
-
-      margin: 10,
+      // margin: 10,
     },
   };
   const config = {
@@ -309,9 +309,9 @@ export default function App() {
     );
   };
   const Home = ({ navigation }) => {
+    const insets=useSafeAreaInsets()
     return (
-      <View style={styles.container}>
-        {/* <SafeAreaView style={styles.container}> */}
+      <View style={{...styles.container,paddingTop:insets.top, marginLeft:insets.left+10, marginRight:insets.right+10, paddingBottom:0, paddingLeft:insets.left, paddingRight: insets.right}}>
         <Text
           style={{
             fontSize: 20,
@@ -339,15 +339,19 @@ export default function App() {
         {/* <CardList navigation={navigation} pressedButton={pressedButton} /> */}
         {/* </SafeAreaView> */}
       </View>
+
     );
   };
 
   return (
+    <SafeAreaProvider>
     <salariesContext.Provider value={{ savedSalaries, setSavedSalaries }}>
       {/* <navChosenDevider.Provider value={{ pressedButton, setPressedButton }}> */}
       <NavigationContainer theme={MyTheme}>
         <Tab.Navigator
+ 
           screenOptions={{
+            borderTopWidth: 0,
             headerShown: false,
           }}
         >
@@ -403,6 +407,8 @@ export default function App() {
       </NavigationContainer>
       {/* </navChosenDevider.Provider> */}
     </salariesContext.Provider>
+    </SafeAreaProvider>
+
   );
 }
 
@@ -414,8 +420,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     justifyContent: "flex-start",
-    margin: 10,
-    paddingTop: 20,
+    // marginTop: insets.Top+10,
+    // paddingTop: insets.top+20,
   },
   topNavContainer: {
     flexDirection: "row",
@@ -445,7 +451,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     backgroundColor: GlobalStyles.mainBackgroundColor.backgroundColor,
-    marginVertical: 5,
+    // marginVertical: 5,
   },
   card: {
     backgroundColor: GlobalStyles.light.backgroundColor,
@@ -453,6 +459,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     marginVertical: 5,
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
   },
+  containerBottomTabs: {
+    //backgroundColor: Colors.darkBackgroundColor
+    borderTopWidth: 0
+}
 });
