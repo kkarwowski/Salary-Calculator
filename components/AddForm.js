@@ -44,10 +44,10 @@ export default function AddForm({ navigation }) {
           storeData(newSavedSalaries);
         }}
         validationSchema={yup.object().shape({
-          name: yup.string().required(),
+          name: yup.string().required("Please provide salary name"),
           Salary: yup
             .number()
-            .required("Please, provide your salary!")
+            .required("Please provide your salary")
             .typeError("Salary must be a number and can't be empty")
             .positive(),
           Pension: yup
@@ -71,13 +71,13 @@ export default function AddForm({ navigation }) {
               }}
             >
               <View style={styless.rowContainer}>
-                <Text style={{ marginHorizontal: 10 }}>Salary</Text>
+                <Text style={{ marginHorizontal: 10 }}>Name</Text>
 
                 <TextInput
                   clearButtonMode="always"
                   //   name="salary"
                   textAlign="right"
-                  style={styless.numberInput}
+                  style={{ ...styless.numberInput, width: "40%" }}
                   placeholder="Name"
                   returnKeyType={"done"}
                   onChangeText={(value) => {
@@ -118,7 +118,7 @@ export default function AddForm({ navigation }) {
                   clearButtonMode="always"
                   //   name="salary"
                   textAlign="right"
-                  style={{ ...styless.numberInput, width: "15%" }}
+                  style={{ ...styless.numberInput, width: "20%" }}
                   placeholder="Pension"
                   keyboardType="number-pad"
                   returnKeyType={"done"}
@@ -131,27 +131,6 @@ export default function AddForm({ navigation }) {
               <Text style={{ fontSize: 12, color: "#FF0D10" }}>
                 {props.errors.Pension}
               </Text>
-
-              <TouchableOpacity
-                onPress={() => {
-                  setIsCollapsed(!isCollapsed);
-                }}
-              >
-                <View
-                  style={{
-                    // justifyContent: "space-around",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text>Advanced Options</Text>
-                  <CustomButtonIcon
-                    name="add-circle-outline"
-                    color="black"
-                    size={40}
-                  />
-                </View>
-              </TouchableOpacity>
 
               <Collapsible collapsed={isCollapsed} style={styless.rowContainer}>
                 <View style={styless.rowContainer}>
@@ -190,6 +169,26 @@ export default function AddForm({ navigation }) {
                   /> */}
                 </View>
               </Collapsible>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsCollapsed(!isCollapsed);
+                }}
+              >
+                <View
+                  style={{
+                    // justifyContent: "space-around",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>Advanced Options</Text>
+                  <CustomButtonIcon
+                    name="add-circle-outline"
+                    color="black"
+                    size={40}
+                  />
+                </View>
+              </TouchableOpacity>
               {/* <CustomButton
                 name="Save Salary"
                 onPress={props.handleSubmit}
@@ -221,11 +220,11 @@ const styless = StyleSheet.create({
     flexDirection: "column",
   },
   numberInput: {
-    padding: 10,
+    padding: 5,
     width: "30%",
     borderColor: "black",
     backgroundColor: "white",
-    borderWidth: 1,
+    borderWidth: 0.2,
     borderRadius: 15,
   },
   rowContainer: {
@@ -235,6 +234,6 @@ const styless = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 5,
-    paddingVertical: 10,
+    paddingVertical: 0,
   },
 });

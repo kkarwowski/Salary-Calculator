@@ -241,13 +241,14 @@ export default function App() {
           >
             <View
               style={{
-                backgroundColor: "black",
+                backgroundColor:
+                  GlobalStyles.mainBackgroundColor.backgroundColor,
                 borderRadius: 20,
                 padding: 5,
                 paddingHorizontal: 10,
               }}
             >
-              <Text style={{ color: "white" }}>{obj}</Text>
+              <Text style={{ color: "white", fontSize: 11 }}>{obj}</Text>
             </View>
             <View
               style={{
@@ -351,12 +352,10 @@ export default function App() {
           }}
         >
           <Tab.Screen
-            name="Saved Salaries"
+            name="Salaries"
             component={HomeScreen}
             options={{
-              tabBarItemStyle: { borderWidth: 0, borderColor: "#101010" },
               tabBarStyle: {
-                paddingBottom: 0,
                 color: GlobalStyles.mainBackgroundColor.backgroundColor,
                 backgroundColor:
                   GlobalStyles.mainBackgroundColor.backgroundColor,

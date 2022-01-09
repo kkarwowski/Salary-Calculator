@@ -201,6 +201,7 @@ const DetailsScreen = ({ route, navigation }) => {
           {chartData.map((data) => {
             return (
               <View
+                key={data.x}
                 style={{
                   justifyContent: "space-between",
                   flexDirection: "row",
