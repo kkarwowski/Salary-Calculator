@@ -2,7 +2,8 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   mainBackgroundColor: {
-    backgroundColor: "#333652",
+    backgroundColor: "#E9EAEC",
+    // backgroundColor: "#333652",
   },
   yellow: {
     backgroundColor: "#FAD02C",
@@ -13,10 +14,11 @@ export default StyleSheet.create({
   bluegray: {
     backgroundColor: "#90ADC6",
   },
-  color4: {
+  darkest: {
     backgroundColor: "#333652",
     // backgroundColor: "#f7d13f"
   },
-  navBackground: { backgroundColor: "#90ADC6" },
+  navBackground: { backgroundColor: "#333652" },
+  // navBackground: { backgroundColor: "#90ADC6" },
   navActive: { backgroundColor: "#FAD02C" },
 });

@@ -12,7 +12,6 @@ import { SafeAreaView , SafeAreaProvider, useSafeAreaInsets} from "react-native-
 
 import { CountUp } from "use-count-up";
 import { salaryPerSetting } from "./utils/salaryPerSetting";
-import { Chip } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { salariesContext, navChosenDevider } from "./utils/context";
 import { useState, useEffect, useContext } from "react";
@@ -230,7 +229,8 @@ export default function App() {
             <View
               style={{
                 backgroundColor:
-                  GlobalStyles.mainBackgroundColor.backgroundColor,
+                  // GlobalStyles.mainBackgroundColor.backgroundColor,
+                  GlobalStyles.darkest.backgroundColor,
                 borderRadius: 20,
                 padding: 5,
                 paddingHorizontal: 10,
@@ -307,6 +307,7 @@ export default function App() {
             paddingTop: 30,
             fontWeight: "600",
             color: GlobalStyles.light.backgroundColor,
+            color: GlobalStyles.darkest.backgroundColor,
           }}
         >
           Saved Salaries
@@ -439,7 +440,8 @@ const styles = StyleSheet.create({
     backgroundColor: GlobalStyles.mainBackgroundColor.backgroundColor,
   },
   card: {
-    backgroundColor: GlobalStyles.light.backgroundColor,
+    backgroundColor: "white",
+    // backgroundColor: GlobalStyles.light.backgroundColor,
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 15,
