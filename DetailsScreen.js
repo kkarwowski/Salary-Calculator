@@ -19,28 +19,45 @@ import { VictoryPie } from "victory-native";
 import { CountUp } from "use-count-up";
 import Slider from "@react-native-community/slider";
 const DetailsScreen = ({ route, navigation }) => {
-  const [salaryRaised, setRaisedSalary] = useState();
   const salary = route.params.salary;
   const pensionPercentage = route.params.pension;
   const key = route.params.key;
-  const [raisePercentage, setRaiseParcentage] = useState();
+  const [raisePercentage, setRaiseParcentage] = useState(0);
+  const [raisedSalary, setRaisedSalary] = useState();
+  const [raisedSalaryDetails, setRaisedSalaryDetails] = useState([
+    { x: "Tax", y: 0 },
+    { x: "NI", y: 0 },
+    { x: "Pension", y: 0 },
+    { x: "Take home", y: 0 },
+  ]);
+
   const PieColors = ["#414441", "#0086CB", "#F83C31", "#FFCD58"];
-  console.log(salary);
   // const { pressedButton, setPressedButton } = useContext(navChosenDevider);
-  const [currentSalary, setCurrentSalary] = useState();
+  const [currentSalary, setCurrentSalary] = useState(route.params.salary);
   const [pressedButton, setPressedButton] = useState("Annual");
 
   const [chartData, setChartData] = useState([
     { x: "Tax", y: 0 },
     { x: "NI", y: 0 },
     { x: "Pension", y: 0 },
-    { x: "Take home", y: parseInt(salary) },
+    { x: "Take home", y: parseInt(currentSalary) },
   ]);
+
+  const constSetRaisedSalaryCalc = (raisedSAl) => {
+    console.log("run");
+    const { totalTax, NIYear, pensionContibution, Takehome } =
+      calculateFunction(raisedSAl, pensionPercentage);
+    setRaisedSalaryDetails([
+      { x: "Tax", y: parseInt(totalTax) },
+      { x: "NI", y: parseInt(NIYear) },
+      { x: "Pension", y: parseInt(pensionContibution) },
+      { x: "Take home", y: parseInt(Takehome) },
+    ]);
+  };
 
   useEffect(() => {
     const { totalTax, NIYear, pensionContibution, Takehome } =
-      calculateFunction(salary, pensionPercentage);
-    console.log(totalTax, pensionContibution, NIYear, Takehome);
+      calculateFunction(currentSalary, pensionPercentage);
     setTimeout(() => {
       setChartData([
         { x: "Tax", y: parseInt(totalTax) },
@@ -53,8 +70,6 @@ const DetailsScreen = ({ route, navigation }) => {
   const { savedSalaries, setSavedSalaries } = useContext(salariesContext);
   const ButtonNav = (props) => {
     const { onPress, title } = props;
-    console.log("button", pressedButton);
-
     return (
       <Pressable
         style={{
@@ -189,72 +204,133 @@ const DetailsScreen = ({ route, navigation }) => {
               <CountUp
                 isCounting
                 thousandsSeparator={","}
-                end={salaryPerSetting(salary, pressedButton)}
-                key={salaryPerSetting(salary, pressedButton)}
-                duration={0.4}
+                end={salaryPerSetting(raisedSalaryDetails, pressedButton)}
+                key={raisedSalary}
+                duration={0.2}
                 decimalPlaces={2}
               />
             </Text>
           </View>
-          {chartData.map((data, index) => {
-            return (
+          {raisePercentage > 0 && (
+            <View
+              key={1}
+              style={{
+                justifyContent: "space-between",
+                flexDirection: "row",
+                backgroundColor: "rgba(248, 60, 49, .3)",
+              }}
+            >
               <View
-                key={data.x}
                 style={{
-                  justifyContent: "space-between",
+                  justifyContent: "flex-start",
                   flexDirection: "row",
+                  alignItems: "center",
                 }}
               >
                 <View
                   style={{
-                    justifyContent: "flex-start",
+                    width: 15,
+                    height: 15,
+                    borderRadius: 4,
+                    backgroundColor: PieColors[0],
+                    marginRight: 5,
+                  }}
+                ></View>
+                <Text style={styles.detailsText} key={2}>
+                  Tax
+                </Text>
+              </View>
+
+              <Text style={styles.detailsText} key={3}>
+                £{" "}
+                <CountUp
+                  thousandsSeparator={","}
+                  isCounting
+                  start={chartData[0].y}
+                  end={salaryPerSetting(
+                    raisedSalaryDetails[0].y,
+                    pressedButton
+                  )}
+                  key={salaryPerSetting(
+                    raisedSalaryDetails[0].y,
+                    pressedButton
+                  )}
+                  duration={0.2}
+                  decimalPlaces={2}
+                />
+              </Text>
+            </View>
+          )}
+
+          {chartData.map((data, index) => {
+            return (
+              <>
+                <View
+                  key={data.x}
+                  style={{
+                    justifyContent: "space-between",
                     flexDirection: "row",
-                    alignItems: "center",
                   }}
                 >
                   <View
                     style={{
-                      width: 15,
-                      height: 15,
-                      borderRadius: 4,
-                      backgroundColor: PieColors[index],
-                      marginRight: 5,
+                      justifyContent: "flex-start",
+                      flexDirection: "row",
+                      alignItems: "center",
                     }}
-                  ></View>
-                  <Text style={styles.detailsText} key={data.x}>
-                    {data.x}
+                  >
+                    <View
+                      style={{
+                        width: 15,
+                        height: 15,
+                        borderRadius: 4,
+                        backgroundColor: PieColors[index],
+                        marginRight: 5,
+                      }}
+                    ></View>
+                    <Text style={styles.detailsText} key={data.x}>
+                      {data.x}
+                    </Text>
+                  </View>
+
+                  <Text style={styles.detailsText} key={data.y}>
+                    £{" "}
+                    <CountUp
+                      thousandsSeparator={","}
+                      isCounting
+                      end={salaryPerSetting(data.y, pressedButton)}
+                      key={salaryPerSetting(data.y, pressedButton)}
+                      duration={0.4}
+                      decimalPlaces={2}
+                    />
                   </Text>
                 </View>
-
-                <Text style={styles.detailsText} key={data.y}>
-                  £{" "}
-                  <CountUp
-                    thousandsSeparator={","}
-                    isCounting
-                    end={salaryPerSetting(data.y, pressedButton)}
-                    key={salaryPerSetting(data.y, pressedButton)}
-                    duration={0.4}
-                    decimalPlaces={2}
-                  />
-                </Text>
-              </View>
+              </>
             );
           })}
         </View>
 
-        <Text>Value: {raisePercentage}</Text>
-        <Text>Value: {salaryRaised}</Text>
+        <Text>Percentage: {raisePercentage}</Text>
+        <Text></Text>
         <View style={{ width: 300, marginLeft: 20, marginRight: 20 }}>
           <Slider
             style={{ width: "100%" }}
             tapToSeek={true}
             step={0.1}
             maximumValue={200}
-            onValueChange={(value) => setRaiseParcentage(parseInt(value) / 10)}
-            onSlidingComplete={() =>
-              setRaisedSalary(
-                (salary * raisePercentage) / 100 + parseFloat(salary)
+            onSlidingStart={
+              (value) => setRaiseParcentage(parseInt(value) / 10)
+              // constSetRaisedSalaryCalc()
+            }
+            onValueChange={(value) => (
+              setRaiseParcentage(parseInt(value) / 10),
+              // setRaiseParcentage(parseInt(value) / 10),
+              constSetRaisedSalaryCalc(
+                (salary * (parseInt(value) / 10)) / 100 + parseFloat(salary)
               )
+            )}
+            onSlidingComplete={(value) =>
+              setRaiseParcentage(parseInt(value) / 10)
             }
           />
         </View>
