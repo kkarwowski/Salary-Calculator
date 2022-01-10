@@ -4,23 +4,27 @@ import {
   View,
   SafeAreaView,
   Button,
-  TextInput,
   Pressable,
 } from "react-native";
-import GobalStyles from "./utils/GobalStyles";
+import GlobalStyles from "./utils/GobalStyles";
 import { salaryPerSetting } from "./utils/salaryPerSetting";
 import CustomButtonIcon from "./components/CustomTouchButton";
 import { storeData } from "./utils/dataStorage";
 import calculateFunction from "./utils/calculateFunction";
-import { salariesContext, navChosenDevider } from "./utils/context";
+import { salariesContext } from "./utils/context";
 import { useEffect, useContext, useState } from "react";
 import { VictoryPie } from "victory-native";
+// import MultiSlider from "@ptomasroos/react-native-multi-slider";
 // import NavBar from "./components/NavBar";
 import { CountUp } from "use-count-up";
+import Slider from "@react-native-community/slider";
 const DetailsScreen = ({ route, navigation }) => {
+  const [salaryRaised, setRaisedSalary] = useState();
   const salary = route.params.salary;
   const pensionPercentage = route.params.pension;
   const key = route.params.key;
+  const [raisePercentage, setRaiseParcentage] = useState();
+  const PieColors = ["#414441", "#0086CB", "#F83C31", "#FFCD58"];
   console.log(salary);
   // const { pressedButton, setPressedButton } = useContext(navChosenDevider);
   const [currentSalary, setCurrentSalary] = useState();
@@ -39,10 +43,6 @@ const DetailsScreen = ({ route, navigation }) => {
     console.log(totalTax, pensionContibution, NIYear, Takehome);
     setTimeout(() => {
       setChartData([
-        // { y: 150 },
-        // { y: 100 },
-        // { y: 50 },
-        // { y: 700 },
         { x: "Tax", y: parseInt(totalTax) },
         { x: "NI", y: parseInt(NIYear) },
         { x: "Pension", y: parseInt(pensionContibution) },
@@ -51,7 +51,6 @@ const DetailsScreen = ({ route, navigation }) => {
     }, 100);
   }, []);
   const { savedSalaries, setSavedSalaries } = useContext(salariesContext);
-
   const ButtonNav = (props) => {
     const { onPress, title } = props;
     console.log("button", pressedButton);
@@ -62,14 +61,17 @@ const DetailsScreen = ({ route, navigation }) => {
           ...styles.buttonNav,
           // backgroundColor: title === pressedButton ? "#205a6d" : "#3596b5",
           // backgroundColor: title === pressedButton ? "#002982" : "#2690ff",
-          backgroundColor: title === pressedButton ? "#006e5d" : "#f2fedc",
+          backgroundColor:
+            title === pressedButton
+              ? GlobalStyles.navActive.backgroundColor
+              : GlobalStyles.navBackground.backgroundColor,
         }}
         onPress={onPress}
       >
         <Text
           style={{
             ...styles.ButtonText,
-            color: title === pressedButton ? "white" : "black",
+            color: title === pressedButton ? "black" : "white",
           }}
         >
           {title}
@@ -121,18 +123,12 @@ const DetailsScreen = ({ route, navigation }) => {
         <VictoryPie
           data={chartData}
           // labels={["tax", "NI", "take Home", "np"]}
-          colorScale={["red", "orange", "blue", "green"]}
+          colorScale={PieColors}
           animate={{
-            duration: 100,
-            // onEnter: {
-            //   duration: 1000,
-            // },
-            // onLoad: {
-            //   delay: 2000,
-            // },
+            duration: 200,
           }}
           width={300}
-          height={250}
+          height={230}
           radius={80}
           innerRadius={65}
           events={[
@@ -187,18 +183,20 @@ const DetailsScreen = ({ route, navigation }) => {
             <Text style={styles.detailsText} key={1}>
               Gross Salary
             </Text>
+
             <Text style={styles.detailsText} key={2}>
               £{" "}
               <CountUp
                 isCounting
+                thousandsSeparator={","}
                 end={salaryPerSetting(salary, pressedButton)}
                 key={salaryPerSetting(salary, pressedButton)}
-                duration={0.2}
+                duration={0.4}
                 decimalPlaces={2}
               />
             </Text>
           </View>
-          {chartData.map((data) => {
+          {chartData.map((data, index) => {
             return (
               <View
                 key={data.x}
@@ -207,16 +205,35 @@ const DetailsScreen = ({ route, navigation }) => {
                   flexDirection: "row",
                 }}
               >
-                <Text style={styles.detailsText} key={data.x}>
-                  {data.x}
-                </Text>
+                <View
+                  style={{
+                    justifyContent: "flex-start",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <View
+                    style={{
+                      width: 15,
+                      height: 15,
+                      borderRadius: 4,
+                      backgroundColor: PieColors[index],
+                      marginRight: 5,
+                    }}
+                  ></View>
+                  <Text style={styles.detailsText} key={data.x}>
+                    {data.x}
+                  </Text>
+                </View>
+
                 <Text style={styles.detailsText} key={data.y}>
                   £{" "}
                   <CountUp
+                    thousandsSeparator={","}
                     isCounting
                     end={salaryPerSetting(data.y, pressedButton)}
                     key={salaryPerSetting(data.y, pressedButton)}
-                    duration={0.2}
+                    duration={0.4}
                     decimalPlaces={2}
                   />
                 </Text>
@@ -225,25 +242,36 @@ const DetailsScreen = ({ route, navigation }) => {
           })}
         </View>
 
-        {/* <Text>
-        total tax = {totalTax}, NI = {NIYear}, pension={pensionContibution},
-        take home = {Takehome}
-      </Text> */}
-        <Button
-          title="test"
-          onPress={() => {
-            const newData = chartData;
-            newData.map((data) => {
-              return { [data.x]: parseInt(data.y) / 2 };
-            });
-            console.log(newData);
-          }}
-        />
+        <Text>Value: {raisePercentage}</Text>
+        <Text>Value: {salaryRaised}</Text>
+        <View style={{ width: 300, marginLeft: 20, marginRight: 20 }}>
+          <Slider
+            style={{ width: "100%" }}
+            tapToSeek={true}
+            step={0.1}
+            maximumValue={200}
+            onValueChange={(value) => setRaiseParcentage(parseInt(value) / 10)}
+            onSlidingComplete={() =>
+              setRaisedSalary(
+                (salary * raisePercentage) / 100 + parseFloat(salary)
+              )
+            }
+          />
+        </View>
+
         <CustomButtonIcon
           size={40}
           color="red"
           name="delete"
           onPress={() => deleteThisSalary(key)}
+        />
+        <CustomButtonIcon
+          size={30}
+          color={GlobalStyles.darkest.backgroundColor}
+          name="edit"
+          onPress={() => {
+            console.log("edit");
+          }}
         />
       </View>
     </SafeAreaView>
@@ -257,18 +285,20 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "column",
     padding: 10,
-    paddingVertical: 20,
+    // paddingVertical: 20,
   },
+  flex: 1,
   container: {
     margin: 10,
-    transform: [{ translateY: -20 }],
-    transform: [{ translateY: 20 }],
-    borderRadius: 32,
-    borderRadius: 32,
-    height: "96%",
+    height: "100%",
+    // transform: [{ translateY: -20 }],
+    // transform: [{ translateY: 20 }],
+    // borderRadius: 32,
+    // borderRadius: 32,
+    // height: "96%",
     // flex: 1,
-    // backgroundColor: GobalStyles.light.backgroundColor,
-    backgroundColor:"white",
+    // backgroundColor: GlobalStyles.light.backgroundColor,
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "flex-start",
   },
@@ -293,10 +323,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
     // backgroundColor: "#2690ff",
-    backgroundColor: "#f2fedc",
-
+    backgroundColor: GlobalStyles.navBackground.backgroundColor,
     borderRadius: 10,
     width: "100%",
+  },
+  SliderContainer: {
+    width: "100%",
+    marginLeft: 10,
+    marginRight: 10,
+    alignItems: "stretch",
+    justifyContent: "center",
   },
 });
 export default DetailsScreen;

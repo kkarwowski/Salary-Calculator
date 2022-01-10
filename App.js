@@ -8,8 +8,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import GlobalStyles from "./utils/GobalStyles";
-import { SafeAreaView , SafeAreaProvider, useSafeAreaInsets} from "react-native-safe-area-context";
-
+import Icon from "react-native-vector-icons/FontAwesome5";
+import {
+  SafeAreaView,
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import CustomStatusBar from "./components/CustomStatusBar";
 import { CountUp } from "use-count-up";
 import { salaryPerSetting } from "./utils/salaryPerSetting";
 import { ScrollView } from "react-native-gesture-handler";
@@ -193,7 +198,7 @@ export default function App() {
         <CustomButtonIcon
           name="add-circle"
           size={50}
-          color={GlobalStyles.yellow.backgroundColor}
+          color={GlobalStyles.darkest.backgroundColor}
           onPress={() =>
             navigation.navigate("AddScreen", savedSalaries, setSavedSalaries)
           }
@@ -252,6 +257,7 @@ export default function App() {
                 £{" "}
                 <CountUp
                   isCounting
+                  thousandsSeparator={","}
                   end={salaryPerSetting(
                     savedSalaries[obj].salary,
                     pressedButton1
@@ -280,6 +286,7 @@ export default function App() {
                 £{" "}
                 <CountUp
                   isCounting
+                  thousandsSeparator={","}
                   end={salaryPerSetting(Number(Takehome), pressedButton1)}
                   key={salaryPerSetting(
                     savedSalaries[obj].salary,
@@ -297,21 +304,55 @@ export default function App() {
     );
   };
   const Home = ({ navigation }) => {
-    const insets=useSafeAreaInsets()
+    const insets = useSafeAreaInsets();
     return (
-      <View style={{...styles.container,paddingTop:insets.top, marginLeft:insets.left+10, marginRight:insets.right+10, paddingBottom:0, paddingLeft:insets.left, paddingRight: insets.right}}>
-        <Text
+      <View
+        style={{
+          ...styles.container,
+          paddingTop: insets.top,
+          marginLeft: insets.left + 10,
+          marginRight: insets.right + 10,
+          paddingBottom: 0,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        }}
+      >
+        <View
           style={{
-            fontSize: 20,
-            padding: 20,
-            paddingTop: 30,
-            fontWeight: "600",
-            color: GlobalStyles.light.backgroundColor,
-            color: GlobalStyles.darkest.backgroundColor,
+            alignItems: "flex-start",
+            flexDirection: "row",
+            width: "100%",
+            alignItems: "center",
+            paddingTop: 10,
+            paddingBottom: 10,
           }}
         >
-          Saved Salaries
-        </Text>
+          {/* <View
+            style={{
+              height: 35,
+              width: 35,
+              backgroundColor: "black",
+              marginRight: 10,
+            }}
+          ></View> */}
+          <Icon
+            name={"comment-dollar"}
+            size={45}
+            color={GlobalStyles.darkest.backgroundColor}
+          />
+          <Text
+            style={{
+              fontSize: 30,
+              paddingLeft: 15,
+              // paddingTop: 20,
+              fontWeight: "600",
+              // color: GlobalStyles.light.backgroundColor,
+              color: "black",
+            }}
+          >
+            Saved Salaries
+          </Text>
+        </View>
 
         <NavBar />
         <AddTaskButton navigation={navigation} />
@@ -328,74 +369,76 @@ export default function App() {
         {/* <CardList navigation={navigation} pressedButton={pressedButton} /> */}
         {/* </SafeAreaView> */}
       </View>
-
     );
   };
 
   return (
     <SafeAreaProvider>
-    <salariesContext.Provider value={{ savedSalaries, setSavedSalaries }}>
-      <NavigationContainer theme={MyTheme}>
-        <Tab.Navigator
- 
-          screenOptions={{
-            borderTopWidth: 0,
-            headerShown: false,
-          }}
-        >
-          <Tab.Screen
-            name="Salaries"
-            component={HomeScreen}
-            options={{
-              tabBarStyle: {
-                color: GlobalStyles.mainBackgroundColor.backgroundColor,
-                backgroundColor:
-                  GlobalStyles.mainBackgroundColor.backgroundColor,
-              },
+      <salariesContext.Provider value={{ savedSalaries, setSavedSalaries }}>
+        <CustomStatusBar
+          backgroundColor={GlobalStyles.mainBackgroundColor.backgroundColor}
+        />
 
-              tabBarLabelStyle: {
-                fontSize: 13,
-                color: GlobalStyles.light.backgroundColor,
-                fontWeight: "500",
-              },
-              tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="home-circle"
-                  color={GlobalStyles.yellow.backgroundColor}
-                  size={30}
-                />
-              ),
-              // tabBarBadge: 3,
+        <NavigationContainer theme={MyTheme}>
+          <Tab.Navigator
+            screenOptions={{
+              borderTopWidth: 0,
+              headerShown: false,
             }}
-          />
-          <Tab.Screen
-            name="SecondScreen"
-            component={SecondScreen}
-            options={{
-              tabBarStyle: {
-                backgroundColor:
-                  GlobalStyles.mainBackgroundColor.backgroundColor,
-              },
-              tabBarLabelStyle: {
-                fontSize: 13,
-                color: GlobalStyles.light.backgroundColor,
-                fontWeight: "500",
-              },
-              tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="tooltip-edit"
-                  color={GlobalStyles.yellow.backgroundColor}
-                  size={30}
-                />
-              ),
-              // tabBarBadge: 3, tooltip-edit
-            }}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </salariesContext.Provider>
+          >
+            <Tab.Screen
+              name="Salaries"
+              component={HomeScreen}
+              options={{
+                tabBarStyle: {
+                  color: GlobalStyles.mainBackgroundColor.backgroundColor,
+                  backgroundColor: GlobalStyles.darkest.backgroundColor,
+                },
+
+                tabBarLabelStyle: {
+                  fontSize: 13,
+                  color: GlobalStyles.light.backgroundColor,
+                  fontWeight: "500",
+                },
+                tabBarIcon: ({ color, size }) => (
+                  <MaterialCommunityIcons
+                    name="home-circle"
+                    color={GlobalStyles.yellow.backgroundColor}
+                    size={30}
+                    style={{ paddingTop: 5 }}
+                  />
+                ),
+                // tabBarBadge: 3,
+              }}
+            />
+            <Tab.Screen
+              name="SecondScreen"
+              component={SecondScreen}
+              options={{
+                tabBarStyle: {
+                  backgroundColor:
+                    GlobalStyles.mainBackgroundColor.backgroundColor,
+                },
+                tabBarLabelStyle: {
+                  fontSize: 13,
+                  color: GlobalStyles.light.backgroundColor,
+                  fontWeight: "500",
+                },
+                tabBarIcon: ({ color, size }) => (
+                  <MaterialCommunityIcons
+                    name="tooltip-edit"
+                    color={GlobalStyles.yellow.backgroundColor}
+                    size={30}
+                    style={{ paddingTop: 5 }}
+                  />
+                ),
+                // tabBarBadge: 3, tooltip-edit
+              }}
+            />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </salariesContext.Provider>
     </SafeAreaProvider>
-
   );
 }
 
